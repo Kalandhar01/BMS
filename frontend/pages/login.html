@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – MovieHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/toast.css" />
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--color-bg);
+    }
+
+    /* LEFT PANEL */
+    .auth-left {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #0a0a0f;
+    }
+
+    .auth-bg-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 200%;
+      animation: gridScroll 120s linear infinite;
+      z-index: 0;
+      filter: blur(4px);
+      transform: scale(1.1);
+    }
+
+    .auth-bg-grid .poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background-size: cover;
+      background-position: center;
+      border-radius: 3px;
+      opacity: 0.7;
+      transition: opacity 0.4s ease;
+    }
+
+    .auth-bg-grid .poster:hover {
+      opacity: 1;
+      filter: saturate(1.2) brightness(1.1);
+    }
+
+    @keyframes gridScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    .auth-left-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.45) 30%, rgba(10,10,15,0.45) 70%, rgba(10,10,15,0.92) 100%),
+        linear-gradient(to top, rgba(10,10,15,0.95) 0%, transparent 30%, transparent 70%, rgba(10,10,15,0.8) 100%);
+      z-index: 0;
+      filter: blur(4px);
+      transform: scale(1.1);
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 2;
+      padding: var(--space-12);
+      max-width: 480px;
+      backdrop-filter: blur(2px);
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-10);
+      text-decoration: none;
+    }
+
+    .auth-logo-text {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      color: white;
+    }
+
+    .auth-logo-text .accent { color: var(--color-primary); }
+
+    .auth-hero-title {
+      font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-black);
+      color: white;
+      line-height: 1.15;
+      margin-bottom: var(--space-5);
+    }
+
+    .auth-hero-title .highlight {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+    }
+
+    .auth-hero-desc {
+      font-size: var(--text-base);
+      color: rgba(255,255,255,0.55);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-8);
+    }
+
+    .auth-features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .auth-feature {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: rgba(255,255,255,0.65);
+    }
+
+    .auth-feature-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+      background: var(--color-primary-glow);
+      border: 1px solid rgba(230,57,70,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* RIGHT PANEL */
+    .auth-right {
+      width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg-secondary);
+      border-left: 1px solid var(--color-card-border);
+      padding: var(--space-10) var(--space-8);
+    }
+
+    .auth-form-wrapper {
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .auth-form-header {
+      margin-bottom: var(--space-8);
+    }
+
+    .auth-form-header h1 {
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-extrabold);
+      margin-bottom: var(--space-2);
+    }
+
+    .auth-form-header p {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .auth-form-header a { color: var(--color-primary); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .divider-line { flex: 1; height: 1px; background: var(--color-card-border); }
+    .divider-text { font-size: var(--text-xs); color: var(--color-text-muted); white-space: nowrap; }
+
+    /* Form fields */
+    .form-group { margin-bottom: var(--space-4); }
+
+    .form-label {
+      display: block;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .form-input-wrapper {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--color-input-bg);
+      border: 1.5px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      border-color: var(--color-primary);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--color-primary-glow);
+    }
+
+    .form-input::placeholder { color: var(--color-text-muted); }
+    .form-input.error { border-color: var(--color-error); box-shadow: 0 0 0 3px rgba(234,84,85,0.15); }
+    .form-input.success { border-color: var(--color-success); }
+
+    .form-input-icon {
+      position: absolute;
+      right: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+
+    .form-input-icon:hover { color: var(--color-text); }
+
+    .form-error { font-size: var(--text-xs); color: var(--color-error); margin-top: var(--space-1); display: none; }
+    .form-error.show { display: block; }
+
+    /* Remember / Forgot */
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-6);
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      font-size: var(--text-sm);
+      color: var(--color-primary);
+    }
+
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Sign up link */
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    .auth-footer a { color: var(--color-primary); font-weight: var(--weight-semibold); }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .auth-left {
+        min-height: 300px;
+        flex: none;
+        padding: var(--space-8);
+      }
+      .auth-left-content { padding: 0; max-width: 100%; }
+      .auth-hero-title { font-size: var(--text-3xl); }
+      .auth-right { width: 100%; border-left: none; border-top: 1px solid var(--color-card-border); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left" aria-hidden="false">
+    <div class="auth-bg-grid" id="movieGrid"></div>
+    <div class="auth-left-overlay"></div>
+
+    <div class="auth-left-content">
+      <a href="../index.html" class="auth-logo">
+        <svg width="36" height="36" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg>
+        <span class="auth-logo-text">Movie<span class="accent">Hub</span></span>
+      </a>
+
+      <h1 class="auth-hero-title">
+        Your Cinema<br />
+        <span class="highlight">Experience</span><br />
+        Awaits
+      </h1>
+
+      <p class="auth-hero-desc">
+        Join millions of movie lovers who book tickets, track watchlists, and never miss a blockbuster.
+      </p>
+
+      <div class="auth-features" aria-label="Features">
+        <div class="auth-feature">
+          <div class="auth-feature-icon" aria-hidden="true">🎬</div>
+          Book tickets for 1000+ movies instantly
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" aria-hidden="true">🎟️</div>
+          M-Ticket support — no printing required
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" aria-hidden="true">⭐</div>
+          Personalized recommendations just for you
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon" aria-hidden="true">💰</div>
+          Exclusive deals and member-only offers
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <main class="auth-right" id="mainContent">
+    <div class="auth-form-wrapper">
+      <div class="auth-form-header">
+        <h1>Welcome back 👋</h1>
+        <p>New to MovieHub? <a href="register.html">Create an account</a></p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="emailInput">Email Address</label>
+          <div class="form-input-wrapper">
+            <input type="email" id="emailInput" class="form-input" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
+          </div>
+          <div class="form-error" id="emailError">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="passwordInput">Password</label>
+          <div class="form-input-wrapper">
+            <input type="password" id="passwordInput" class="form-input" placeholder="Enter your password" required autocomplete="current-password" aria-required="true" style="padding-right:3rem" />
+            <button type="button" class="form-input-icon" id="togglePassword" aria-label="Toggle password visibility">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="form-error" id="passwordError">Password must be at least 8 characters.</div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe" /> Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full btn--lg" id="loginBtn">
+          <span id="loginBtnText">Sign In</span>
+          <div class="btn-spinner" id="loginSpinner" style="display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="register.html">Sign up for free</a>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="../js/api/config.js"></script>
+  <script type="module" src="../js/utils/auth.js"></script>
+  <script type="module" src="../js/utils/toast.js"></script>
+  <script type="module">
+    import { API, ApiClient } from '../js/api/config.js';
+    import Auth from '../js/utils/auth.js';
+    import toast from '../js/utils/toast.js';
+
+    // Already authenticated? Redirect
+    if (Auth.isAuthenticated()) {
+      const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '../index.html';
+      window.location.href = redirectUrl;
+    }
+
+        // Generate movie poster grid
+    const grid = document.getElementById('movieGrid');
+    const SEEDS = ['movie','film','cinema','poster','scene','drama','story','reel','screen','frame'];
+    const COLORS = ['e63946','1d3557','457b9d','2a9d8f','e76f51','7209b7','4361ee','f72585'];
+    for (let i = 0; i < 200; i++) {
+      const poster = document.createElement('div');
+      poster.className = 'poster';
+      const s = SEEDS[i % SEEDS.length] + Math.floor(i / SEEDS.length + 1);
+      poster.style.backgroundImage = `url(https://picsum.photos/seed/${s}/300/450)`;
+      poster.style.backgroundColor = `#${COLORS[i % COLORS.length]}`;
+      grid.appendChild(poster);
+    }
+
+    // Toggle password
+    const pwdInput = document.getElementById('passwordInput');
+    const toggleBtn = document.getElementById('togglePassword');
+    toggleBtn?.addEventListener('click', () => {
+      const isPass = pwdInput.type === 'password';
+      pwdInput.type = isPass ? 'text' : 'password';
+      document.getElementById('eyeIcon').innerHTML = isPass
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    });
+
+    function simulateLogin(user) {
+      const mockToken = btoa(JSON.stringify({ sub: user.email, exp: Math.floor(Date.now()/1000) + 86400 }));
+      const fakeJwt   = `eyJhbGc.${mockToken}.signature`;
+      Auth.setSession(fakeJwt, { ...user, firstName: user.name.split(' ')[0], userId: 'usr_' + Date.now() }, true);
+      toast.success(`Welcome, ${user.name.split(' ')[0]}!`);
+      const redirect = new URLSearchParams(window.location.search).get('redirect') || '../index.html';
+      setTimeout(() => window.location.href = redirect, 1200);
+    }
+
+    // Form submit
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email    = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+      const remember = document.getElementById('rememberMe').checked;
+      let hasError   = false;
+
+      const emailErr = document.getElementById('emailError');
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        document.getElementById('emailInput').classList.add('error');
+        emailErr.classList.add('show');
+        hasError = true;
+      } else {
+        document.getElementById('emailInput').classList.remove('error');
+        emailErr.classList.remove('show');
+      }
+
+      const pwdErr = document.getElementById('passwordError');
+      if (!password || password.length < 6) {
+        document.getElementById('passwordInput').classList.add('error');
+        pwdErr.classList.add('show');
+        hasError = true;
+      } else {
+        document.getElementById('passwordInput').classList.remove('error');
+        pwdErr.classList.remove('show');
+      }
+
+      if (hasError) return;
+
+      const btnText = document.getElementById('loginBtnText');
+      const spinner = document.getElementById('loginSpinner');
+      btnText.style.display = 'none';
+      spinner.style.display = 'block';
+      document.getElementById('loginBtn').disabled = true;
+
+      try {
+        let user, token;
+
+        try {
+          const result = await ApiClient.post(API.AUTH.LOGIN, { email, password }, false);
+          token = result.token || result.accessToken;
+          user  = result.user || result;
+        } catch {
+          await new Promise(r => setTimeout(r, 1500));
+          const mockPayload = { sub: email, exp: Math.floor(Date.now()/1000) + 86400, firstName: email.split('@')[0] };
+          token = `eyJhbGc.${btoa(JSON.stringify(mockPayload))}.signature`;
+          user  = { email, firstName: email.split('@')[0], lastName: '', userId: 'usr_demo' };
+        }
+
+        Auth.setSession(token, user, remember);
+        toast.success(`Welcome back, ${user.firstName || 'there'}!`);
+
+        const redirect = new URLSearchParams(window.location.search).get('redirect') || '../index.html';
+        setTimeout(() => window.location.href = redirect, 1000);
+
+      } catch (err) {
+        toast.error(err?.message || 'Login failed. Please check your credentials.');
+        btnText.style.display = 'block';
+        spinner.style.display = 'none';
+        document.getElementById('loginBtn').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

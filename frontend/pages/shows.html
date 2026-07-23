@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shows – MovieHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/components/navbar.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/toast.css" />
+  <style>
+    body { padding-top: var(--navbar-height); background: var(--color-bg); }
+
+    .shows-page {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-8) var(--container-padding) var(--space-16);
+    }
+
+    /* Movie Info Header */
+    .movie-info-bar {
+      display: flex;
+      gap: var(--space-6);
+      align-items: center;
+      padding: var(--space-6);
+      background: var(--color-card);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--color-card-border);
+      margin-bottom: var(--space-8);
+    }
+
+    .movie-info-bar__poster {
+      width: 80px;
+      height: 120px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .movie-info-bar__poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .movie-info-bar__body { flex: 1; min-width: 0; }
+
+    .movie-info-bar__title {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-accent);
+      margin-bottom: var(--space-2);
+    }
+
+    .movie-info-bar__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-3);
+    }
+
+    .movie-info-bar__genres { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+
+    .movie-info-bar__book {
+      flex-shrink: 0;
+    }
+
+    /* Date Selector */
+    .date-selector-wrap {
+      margin-bottom: var(--space-8);
+    }
+
+    .date-selector-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .date-selector {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+      scrollbar-width: none;
+    }
+
+    .date-selector::-webkit-scrollbar { display: none; }
+
+    .date-btn {
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--glass-border);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+      min-width: 60px;
+    }
+
+    .date-btn .day-num { font-size: var(--text-lg); font-weight: var(--weight-bold); display: block; }
+    .date-btn .day-name { font-size: 10px; text-transform: uppercase; }
+
+    .date-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .date-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    /* Theatre & Show Times */
+    .show-time-group { margin-bottom: var(--space-6); }
+
+    .show-time-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .theatre-row {
+      background: var(--color-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-card-border);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      transition: all var(--transition-fast);
+    }
+
+    .theatre-row:hover {
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: var(--shadow-md);
+    }
+
+    .theatre-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .theatre-row-name { font-weight: var(--weight-semibold); color: var(--color-accent); }
+
+    .theatre-row-location {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .show-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .show-time-btn {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--color-success);
+      background: transparent;
+      color: var(--color-success);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .show-time-btn:hover {
+      background: var(--color-success-light);
+      transform: translateY(-1px);
+    }
+
+    .show-time-btn .price {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-regular);
+    }
+
+    .show-time-btn.selected {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    .show-time-btn.selected .price { color: rgba(255,255,255,0.8); }
+
+    .no-shows-msg {
+      text-align: center;
+      padding: var(--space-16) 0;
+      color: var(--color-text-muted);
+    }
+
+    .no-shows-msg__icon { font-size: 48px; margin-bottom: var(--space-4); }
+    .no-shows-msg__title { font-size: var(--text-xl); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
+    .no-shows-msg__desc { font-size: var(--text-sm); }
+
+    /* Proceed bar */
+    .proceed-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-card);
+      border-top: 1px solid var(--color-card-border);
+      padding: var(--space-4) var(--container-padding);
+      z-index: var(--z-sticky);
+      display: none;
+    }
+
+    .proceed-bar.show { display: block; }
+
+    .proceed-bar__inner {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .proceed-bar__info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .proceed-bar__show-detail {
+      font-size: var(--text-sm);
+      color: var(--color-accent);
+      font-weight: var(--weight-semibold);
+    }
+
+    .proceed-bar__theatre-detail {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .movie-info-bar { flex-direction: column; text-align: center; }
+      .movie-info-bar__body { text-align: center; }
+      .movie-info-bar__meta { justify-content: center; }
+      .movie-info-bar__genres { justify-content: center; }
+      .proceed-bar__info { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar" id="navbar">
+    <div class="navbar__container">
+      <div class="navbar__left">
+        <a href="../index.html" class="navbar__logo" aria-label="MovieHub Home">
+          <span class="logo-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg></span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <nav class="navbar__nav" id="navLinks">
+          <a href="../index.html" class="nav-link" id="nav-home">Home</a>
+          <a href="movies.html" class="nav-link" id="nav-movies">Movies</a>
+          <a href="booking-history.html" class="nav-link" id="nav-history">Booking History</a>
+        </nav>
+      </div>
+      <div class="navbar__right">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </button>
+        <div class="user-menu-wrapper" id="userMenuWrapper">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User menu" aria-expanded="false">
+            <div class="user-avatar" id="userAvatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <span class="user-name" id="userDisplayName">Sign In</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-header">
+              <div class="dropdown-avatar" id="dropdownAvatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div class="dropdown-name" id="dropdownName">Guest User</div><div class="dropdown-email" id="dropdownEmail">Sign in to continue</div></div>
+            </div>
+            <hr class="dropdown-divider"/>
+            <a href="profile.html" class="dropdown-item" role="menuitem">My Profile</a>
+            <a href="booking-history.html" class="dropdown-item" role="menuitem">My Bookings</a>
+            <hr class="dropdown-divider"/>
+            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">Logout</button>
+            <a href="login.html" class="dropdown-item auth-link" id="loginLink">Sign In</a>
+          </div>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
+    <nav class="mobile-menu">
+      <div class="mobile-menu-header">
+        <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="movies.html" class="mobile-nav-link">Movies</a>
+      <a href="login.html" class="mobile-nav-link mobile-auth-link" id="mobileLoginLink">Sign In</a>
+    </nav>
+  </div>
+
+  <aside class="notification-panel" id="notifPanel" aria-hidden="true">
+    <div class="notif-header"><h3>Notifications</h3><button class="mark-all-read" id="markAllRead">Mark all read</button></div>
+    <div class="notif-list" id="notifList"></div>
+  </aside>
+
+  <main id="mainContent">
+    <div class="shows-page">
+
+      <!-- Breadcrumb -->
+      <nav style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-6)">
+        <a href="../index.html" style="color:var(--color-text-muted)">Home</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="movies.html" style="color:var(--color-text-muted)">Movies</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span style="color:var(--color-primary)" id="breadcrumbMovie">Loading...</span>
+      </nav>
+
+      <!-- Movie Info Bar -->
+      <div class="movie-info-bar" id="movieInfoBar">
+        <div class="movie-info-bar__poster" id="moviePoster">
+          <div class="skeleton" style="width:100%;height:100%"></div>
+        </div>
+        <div class="movie-info-bar__body">
+          <div class="movie-info-bar__title" id="movieTitle">Loading...</div>
+          <div class="movie-info-bar__meta" id="movieMeta">
+            <span class="skeleton-text" style="width:120px"></span>
+            <span class="skeleton-text" style="width:80px"></span>
+          </div>
+          <div class="movie-info-bar__genres" id="movieGenres"></div>
+        </div>
+      </div>
+
+      <!-- Date Selector -->
+      <div class="date-selector-wrap">
+        <div class="date-selector-label">Select Date</div>
+        <div class="date-selector" id="datePicker"></div>
+      </div>
+
+      <!-- Show Listings -->
+      <div id="showListings">
+        <div class="show-time-group" id="morningShows">
+          <div class="show-time-label">Morning Shows</div>
+          <div id="morningTheatres"></div>
+        </div>
+        <div class="show-time-group" id="afternoonShows">
+          <div class="show-time-label">Afternoon Shows</div>
+          <div id="afternoonTheatres"></div>
+        </div>
+        <div class="show-time-group" id="eveningShows">
+          <div class="show-time-label">Evening Shows</div>
+          <div id="eveningTheatres"></div>
+        </div>
+        <div class="show-time-group" id="nightShows">
+          <div class="show-time-label">Night Shows</div>
+          <div id="nightTheatres"></div>
+        </div>
+      </div>
+
+      <!-- No Shows -->
+      <div class="no-shows-msg" id="noShowsMsg" style="display:none">
+        <div class="no-shows-msg__icon">🎭</div>
+        <div class="no-shows-msg__title">No Shows Available</div>
+        <div class="no-shows-msg__desc">There are no shows scheduled for this movie on the selected date.</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Proceed Bar -->
+  <div class="proceed-bar" id="proceedBar">
+    <div class="proceed-bar__inner">
+      <div class="proceed-bar__info">
+        <span class="proceed-bar__show-detail" id="proceedShowDetail">Select a show</span>
+        <span class="proceed-bar__theatre-detail" id="proceedTheatreDetail"></span>
+      </div>
+      <button class="btn btn--primary btn--lg" id="proceedBtn" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+        Select Seats
+      </button>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script type="module" src="../js/api/config.js"></script>
+  <script type="module" src="../js/utils/auth.js"></script>
+  <script type="module" src="../js/utils/toast.js"></script>
+  <script type="module" src="../js/utils/helpers.js"></script>
+  <script type="module" src="../js/components/navbar.js"></script>
+  <script type="module">
+    import { API, ApiClient } from '../js/api/config.js';
+    import Auth from '../js/utils/auth.js';
+    import toast from '../js/utils/toast.js';
+    import { formatTime, formatDuration } from '../js/utils/helpers.js';
+
+    const GENRE_COLORS = {
+      'Action':'badge--red','Thriller':'badge--warning','Drama':'badge--info',
+      'Sci-Fi':'badge--primary','Comedy':'badge--success','Horror':'badge--ghost',
+      'Fantasy':'badge--gold','Romance':'badge--red','Adventure':'badge--success',
+      'Mystery':'badge--ghost','Crime':'badge--warning','War':'badge--ghost',
+      'Historical':'badge--gold','Biopic':'badge--info','Legal':'badge--info',
+      'Political':'badge--red','Entertainment':'badge--success',
+    };
+
+    let selectedDate = null;
+    let selectedShowId = null;
+    let selectedShowData = null;
+    let currentMovie = null;
+    let screensCache = null;
+    let allShows = [];
+
+    function getMovieId() {
+      return new URLSearchParams(window.location.search).get('movieId') ||
+             new URLSearchParams(window.location.search).get('id');
+    }
+
+    function normalizeMovie(m) {
+      const genreArray = typeof m.genre === 'string' ? m.genre.split(',').map(g => g.trim()).filter(Boolean) : (m.genre || []);
+      return {
+        ...m,
+        posterUrl: m.posterUrl || m.poster || '',
+        backdropUrl: m.backdropUrl || m.backdrop || '',
+        duration: m.duration ? (typeof m.duration === 'number' ? formatDuration(m.duration) : m.duration) : '',
+        releaseDate: m.releaseDate || m.release_date || '',
+        genre: genreArray,
+        trailerUrl: m.trailerUrl || '',
+        description: m.description || '',
+      };
+    }
+
+    async function getScreens() {
+      if (screensCache) return screensCache;
+      try {
+        screensCache = await ApiClient.get(API.SCREENS.ALL, false);
+        return screensCache;
+      } catch {
+        screensCache = [];
+        return screensCache;
+      }
+    }
+
+    function getTimePeriod(startTime) {
+      const h = parseInt(startTime.split(':')[0], 10);
+      if (h < 12) return 'morning';
+      if (h < 17) return 'afternoon';
+      if (h < 21) return 'evening';
+      return 'night';
+    }
+
+    function renderMovieInfo(movie) {
+      const poster = document.getElementById('moviePoster');
+      const title = document.getElementById('movieTitle');
+      const meta = document.getElementById('movieMeta');
+      const genres = document.getElementById('movieGenres');
+      const breadcrumb = document.getElementById('breadcrumbMovie');
+
+      if (poster) poster.innerHTML = `<img src="${movie.posterUrl}" alt="${movie.title}" loading="eager" />`;
+      if (title) title.textContent = movie.title;
+      if (breadcrumb) breadcrumb.textContent = movie.title;
+      document.title = `${movie.title} – Shows – MovieHub`;
+
+      if (meta) {
+        meta.innerHTML = `
+          <span class="movie-meta-item" style="display:inline-flex;align-items:center;gap:4px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            ${movie.rating}/10
+          </span>
+          <span>${movie.duration}</span>
+          <span>${movie.language}</span>
+        `;
+      }
+
+      if (genres) {
+        genres.innerHTML = movie.genre.slice(0, 3).map(g =>
+          `<span class="badge badge--sm ${GENRE_COLORS[g] || 'badge--ghost'}">${g}</span>`
+        ).join('');
+      }
+    }
+
+    function renderDatePicker() {
+      const picker = document.getElementById('datePicker');
+      if (!picker) return;
+      const today = new Date();
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      picker.innerHTML = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const isToday = i === 0;
+        return `<button class="date-btn${isToday ? ' active' : ''}" data-date="${d.toISOString().split('T')[0]}">
+          <span class="day-num">${d.getDate()}</span>
+          <span class="day-name">${isToday ? 'Today' : days[d.getDay()]}</span>
+        </button>`;
+      }).join('');
+      selectedDate = today.toISOString().split('T')[0];
+      picker.querySelectorAll('.date-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          picker.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedDate = btn.dataset.date;
+          renderShows();
+        });
+      });
+    }
+
+    function renderShows() {
+      const periods = ['morning', 'afternoon', 'evening', 'night'];
+      const periodLabels = { morning: 'Morning Shows', afternoon: 'Afternoon Shows', evening: 'Evening Shows', night: 'Night Shows' };
+      const periodEmojis = { morning: '🌅', afternoon: '☀️', evening: '🌆', night: '🌙' };
+
+      if (!selectedDate || !allShows.length) {
+        document.querySelectorAll('.show-time-group').forEach(g => g.style.display = 'none');
+        document.getElementById('noShowsMsg').style.display = 'block';
+        return;
+      }
+
+      const dateShows = allShows.filter(s => s.showDate === selectedDate);
+      document.getElementById('noShowsMsg').style.display = dateShows.length === 0 ? 'block' : 'none';
+
+      periods.forEach(period => {
+        const container = document.getElementById(`${period}Theatres`);
+        const group = document.getElementById(`${period}Shows`);
+        if (!container || !group) return;
+
+        const periodShows = dateShows.filter(s => getTimePeriod(s.startTime) === period);
+        if (periodShows.length === 0) {
+          group.style.display = 'none';
+          return;
+        }
+        group.style.display = 'block';
+        group.querySelector('.show-time-label').textContent = `${periodEmojis[period]} ${periodLabels[period]}`;
+
+        const screens = screensCache || [];
+        const theatreGroups = {};
+        periodShows.forEach(s => {
+          const screen = screens.find(sc => sc.id === s.screenId) || {};
+          const key = screen.theatreName || 'Unknown Theatre';
+          if (!theatreGroups[key]) theatreGroups[key] = { location: screen.location || '', screenName: screen.name || '', shows: [] };
+          theatreGroups[key].shows.push(s);
+        });
+
+        container.innerHTML = Object.entries(theatreGroups).map(([theatre, data]) => `
+          <div class="theatre-row">
+            <div class="theatre-row-header">
+              <div>
+                <div class="theatre-row-name">${theatre}</div>
+                <div class="theatre-row-location">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  ${data.location}
+                  ${data.screenName ? ` · ${data.screenName}` : ''}
+                </div>
+              </div>
+              <span class="badge badge--ghost">M-Ticket</span>
+            </div>
+            <div class="show-times">
+              ${data.shows.map(s => `
+                <button class="show-time-btn${selectedShowId == s.id ? ' selected' : ''}"
+                  data-show-id="${s.id}" data-start="${s.startTime}" data-end="${s.endTime}"
+                  data-price="${s.price}" data-screen-id="${s.screenId}"
+                  aria-label="Show at ${formatTime(s.startTime)}">
+                  ${formatTime(s.startTime)}
+                  <span class="price">₹${s.price}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+
+        container.querySelectorAll('.show-time-btn').forEach(btn => {
+          btn.addEventListener('click', () => selectShow(btn));
+        });
+      });
+
+      updateProceedBar();
+    }
+
+    function selectShow(btn) {
+      document.querySelectorAll('.show-time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedShowId = btn.dataset.showId;
+      selectedShowData = {
+        id: btn.dataset.showId,
+        startTime: btn.dataset.start,
+        endTime: btn.dataset.end,
+        price: btn.dataset.price,
+        screenId: btn.dataset.screenId,
+      };
+      updateProceedBar();
+    }
+
+    function updateProceedBar() {
+      const bar = document.getElementById('proceedBar');
+      const btn = document.getElementById('proceedBtn');
+      const showDetail = document.getElementById('proceedShowDetail');
+      const theatreDetail = document.getElementById('proceedTheatreDetail');
+
+      if (!selectedShowId) {
+        bar.classList.remove('show');
+        return;
+      }
+
+      bar.classList.add('show');
+
+      const screens = screensCache || [];
+      const screen = screens.find(s => s.id == selectedShowData.screenId);
+      const theatreName = screen?.theatreName || 'Theatre';
+      const screenName = screen?.name || '';
+      const location = screen?.location || '';
+
+      showDetail.textContent = `${formatTime(selectedShowData.startTime)}  |  ₹${selectedShowData.price}`;
+      theatreDetail.textContent = `${theatreName}${screenName ? ' · ' + screenName : ''}${location ? ' · ' + location : ''}`;
+      btn.disabled = false;
+    }
+
+    document.getElementById('proceedBtn')?.addEventListener('click', () => {
+      if (!Auth.isAuthenticated()) {
+        toast.warning('Please sign in to book tickets.');
+        setTimeout(() => window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`, 1500);
+        return;
+      }
+      const movieId = getMovieId();
+      window.location.href = `seat-selection.html?movieId=${movieId}&showId=${selectedShowId}&date=${selectedDate}`;
+    });
+
+    async function init() {
+      const movieId = getMovieId();
+      if (!movieId) {
+        window.location.href = 'movies.html';
+        return;
+      }
+
+      try {
+        const rawMovie = await ApiClient.get(API.MOVIES.BY_ID(movieId), false);
+        currentMovie = normalizeMovie(rawMovie);
+      } catch {
+        toast.error('Movie not found');
+        setTimeout(() => window.location.href = 'movies.html', 1500);
+        return;
+      }
+
+      renderMovieInfo(currentMovie);
+      renderDatePicker();
+
+      try {
+        allShows = await ApiClient.get(API.SHOWS.BY_MOVIE(movieId), false);
+      } catch {
+        allShows = [];
+      }
+
+      await getScreens();
+      renderShows();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

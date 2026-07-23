@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings – MovieHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/components/navbar.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/toast.css" />
+  <link rel="stylesheet" href="../css/components/modals.css" />
+  <link rel="stylesheet" href="../css/components/footer.css" />
+  <style>
+    body { padding-top: var(--navbar-height); }
+
+    .bookings-page {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-10) var(--container-padding) var(--space-16);
+    }
+
+    .page-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-8);
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+
+    .page-header-row h1 {
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      font-weight: var(--weight-extrabold);
+    }
+
+    /* Stats */
+    .bookings-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+
+    .stat-card {
+      background: var(--color-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-card-border);
+      padding: var(--space-5);
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+
+    .stat-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-primary-sm); }
+
+    .stat-icon { font-size: 28px; margin-bottom: var(--space-2); }
+    .stat-value { font-size: var(--text-3xl); font-weight: var(--weight-extrabold); color: var(--color-primary); }
+    .stat-label { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Filter tabs */
+    .booking-tabs {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-card-border);
+      padding-bottom: -1px;
+    }
+
+    .booking-tab {
+      padding: var(--space-3) var(--space-5);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all var(--transition-fast);
+    }
+
+    .booking-tab:hover { color: var(--color-accent); }
+    .booking-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); font-weight: var(--weight-semibold); }
+
+    /* Booking cards */
+    .bookings-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .booking-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      transition: all var(--transition-fast);
+    }
+
+    .booking-card:hover { box-shadow: var(--shadow-lg); border-color: rgba(255,255,255,0.1); }
+
+    .booking-card__inner {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: var(--space-5);
+      padding: var(--space-5);
+      align-items: center;
+    }
+
+    .booking-poster {
+      width: 100px;
+      height: 148px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .booking-poster img { width: 100%; height: 100%; object-fit: cover; }
+
+    .booking-info {}
+
+    .booking-movie-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-accent);
+      margin-bottom: var(--space-2);
+    }
+
+    .booking-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2) var(--space-6);
+      margin-bottom: var(--space-4);
+    }
+
+    .booking-meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .booking-meta-item svg { color: var(--color-text-muted); flex-shrink: 0; }
+    .booking-meta-item strong { color: var(--color-accent); font-weight: var(--weight-medium); }
+
+    .booking-seats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: var(--space-3);
+    }
+
+    .booking-seat-chip {
+      padding: 2px 8px;
+      background: var(--color-primary-glow);
+      border: 1px solid rgba(230,57,70,0.2);
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: var(--weight-bold);
+      color: var(--color-primary-light);
+    }
+
+    .booking-actions-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-3);
+      min-width: 160px;
+    }
+
+    .booking-amount {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-extrabold);
+      color: var(--color-primary);
+      text-align: right;
+    }
+
+    .booking-amount-label { font-size: var(--text-xs); color: var(--color-text-muted); text-align: right; }
+
+    .booking-card__footer {
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-bg-secondary);
+      border-top: 1px solid var(--color-card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .booking-id-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+    }
+
+    .booking-id-val {
+      font-weight: var(--weight-bold);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+    }
+
+    .booking-id-val:hover { color: var(--color-primary); }
+
+    /* Empty state */
+    .bookings-empty {
+      text-align: center;
+      padding: var(--space-16) var(--space-8);
+    }
+
+    .bookings-empty-icon { font-size: 64px; margin-bottom: var(--space-4); }
+    .bookings-empty-title { font-size: var(--text-2xl); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
+    .bookings-empty-desc { color: var(--color-text-muted); margin-bottom: var(--space-6); }
+
+    @media (max-width: 768px) {
+      .bookings-stats { grid-template-columns: repeat(2, 1fr); }
+      .booking-card__inner { grid-template-columns: 80px 1fr; grid-template-rows: 1fr auto; }
+      .booking-actions-col { grid-column: 1/-1; flex-direction: row; justify-content: space-between; align-items: center; min-width: 0; }
+      .booking-poster { width: 80px; height: 120px; }
+      .booking-meta-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .bookings-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="navbar__container">
+      <div class="navbar__left">
+        <a href="../index.html" class="navbar__logo">
+          <span class="logo-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg></span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <nav class="navbar__nav" id="navLinks">
+          <a href="../index.html" class="nav-link" id="nav-home">Home</a>
+          <a href="movies.html" class="nav-link" id="nav-movies">Movies</a>
+          <a href="booking-history.html" class="nav-link active" id="nav-history">Booking History</a>
+        </nav>
+      </div>
+      <div class="navbar__center">
+        <div class="search-bar" role="search">
+          <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" id="globalSearch" class="search-input" placeholder="Search movies..." aria-label="Search movies" />
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+      </div>
+      <div class="navbar__right">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </button>
+        <div class="user-menu-wrapper" id="userMenuWrapper">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User menu" aria-expanded="false">
+            <div class="user-avatar" id="userAvatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <span class="user-name" id="userDisplayName">Sign In</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-header">
+              <div class="dropdown-avatar" id="dropdownAvatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div class="dropdown-name" id="dropdownName">Guest User</div><div class="dropdown-email" id="dropdownEmail">Sign in to continue</div></div>
+            </div>
+            <hr class="dropdown-divider"/>
+            <a href="profile.html" class="dropdown-item">My Profile</a>
+            <a href="booking-history.html" class="dropdown-item">My Bookings</a>
+            <hr class="dropdown-divider"/>
+            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">Logout</button>
+            <a href="login.html" class="dropdown-item auth-link" id="loginLink">Sign In</a>
+          </div>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
+    <nav class="mobile-menu">
+      <div class="mobile-menu-header">
+        <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="movies.html" class="mobile-nav-link">Movies</a>
+      <a href="booking-history.html" class="mobile-nav-link">Booking History</a>
+      <a href="login.html" class="mobile-nav-link mobile-auth-link" id="mobileLoginLink">Sign In</a>
+    </nav>
+  </div>
+
+  <aside class="notification-panel" id="notifPanel" aria-hidden="true">
+    <div class="notif-header"><h3>Notifications</h3><button class="mark-all-read" id="markAllRead">Mark all read</button></div>
+    <div class="notif-list" id="notifList"></div>
+  </aside>
+
+  <main id="mainContent">
+    <div class="bookings-page">
+
+      <!-- HEADER -->
+      <div class="page-header-row">
+        <div>
+          <nav style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-2)">
+            <a href="../index.html" style="color:var(--color-text-muted)">Home</a>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <span style="color:var(--color-primary)">My Bookings</span>
+          </nav>
+          <h1>🎟️ My Bookings</h1>
+        </div>
+        <a href="movies.html" class="btn btn--primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Book New Ticket
+        </a>
+      </div>
+
+      <!-- STATS -->
+      <div class="bookings-stats" aria-label="Booking statistics">
+        <div class="stat-card">
+          <div class="stat-icon" aria-hidden="true">🎬</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total Bookings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" aria-hidden="true">✅</div>
+          <div class="stat-value" id="statConfirmed">0</div>
+          <div class="stat-label">Confirmed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" aria-hidden="true">💰</div>
+          <div class="stat-value" id="statSpent">₹0</div>
+          <div class="stat-label">Total Spent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" aria-hidden="true">🎭</div>
+          <div class="stat-value" id="statSeats">0</div>
+          <div class="stat-label">Seats Booked</div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="booking-tabs" role="tablist" aria-label="Booking filters">
+        <button class="booking-tab active" data-tab="all" role="tab" aria-selected="true">All Bookings</button>
+        <button class="booking-tab" data-tab="upcoming" role="tab" aria-selected="false">Upcoming</button>
+        <button class="booking-tab" data-tab="completed" role="tab" aria-selected="false">Completed</button>
+        <button class="booking-tab" data-tab="cancelled" role="tab" aria-selected="false">Cancelled</button>
+      </div>
+
+      <!-- BOOKINGS LIST -->
+      <div class="bookings-list" id="bookingsList" role="list" aria-live="polite">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__container">
+      <div class="footer__brand">
+        <a href="../index.html" class="navbar__logo"><span class="logo-icon"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg></span><span class="logo-text">Movie<span class="logo-accent">Hub</span></span></a>
+        <p class="footer__tagline">Your ultimate movie experience.</p>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col"><h4>Company</h4><a href="#">About Us</a><a href="#">Careers</a></div>
+        <div class="footer__col"><h4>Support</h4><a href="#">Contact Us</a><a href="#">FAQ</a></div>
+      </div>
+    </div>
+    <div class="footer__bottom"><p>&copy; 2025 MovieHub. All rights reserved.</p></div>
+  </footer>
+
+  <script type="module" src="../js/api/config.js"></script>
+  <script type="module" src="../js/utils/auth.js"></script>
+  <script type="module" src="../js/utils/toast.js"></script>
+  <script type="module" src="../js/utils/helpers.js"></script>
+  <script type="module" src="../js/components/navbar.js"></script>
+  <script type="module">
+    import { API, ApiClient } from '../js/api/config.js';
+    import Auth from '../js/utils/auth.js';
+    import toast from '../js/utils/toast.js';
+    import { copyToClipboard } from '../js/utils/helpers.js';
+
+    if (!Auth.isAuthenticated()) {
+      window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+    }
+
+    const STATUS_CONFIG = {
+      CONFIRMED: { label: 'Confirmed', badge: 'badge--success', icon: '✓' },
+      PENDING:   { label: 'Pending',   badge: 'badge--info',    icon: '⏳' },
+      CANCELLED: { label: 'Cancelled', badge: 'badge--error',   icon: '✗' },
+    };
+
+    let allBookings = [];
+    let activeTab = 'all';
+
+    function renderBookingCard(b) {
+      const statusKey = b.bookingStatus || b.status || 'CONFIRMED';
+      const status = STATUS_CONFIG[statusKey] || STATUS_CONFIG.CONFIRMED;
+      const seatIds = typeof b.seatIds === 'string' ? b.seatIds.split(',') : (b.seats || []);
+      const total = b.amount || b.total || 0;
+      const bookingId = b.id || b.bookingId || '';
+      const date = b.showDate || b.date || b.bookingTime || '';
+      const time = b.startTime || b.showTime || '';
+
+      return `
+        <article class="booking-card animate-on-scroll" role="listitem">
+          <div class="booking-card__inner">
+            <div class="booking-poster">
+              <div style="width:100%;height:100%;background:var(--color-bg-secondary);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;font-size:32px">🎬</div>
+            </div>
+            <div class="booking-info">
+              <div class="booking-movie-title">Booking #${bookingId}</div>
+              <div class="booking-meta-grid">
+                <div class="booking-meta-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <strong>${date ? new Date(date).toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'}) : 'N/A'}</strong>
+                </div>
+              </div>
+              <div class="booking-seats">
+                ${seatIds.map(s => `<span class="booking-seat-chip">${s}</span>`).join('')}
+              </div>
+              <span class="badge ${status.badge}">${status.icon} ${status.label}</span>
+            </div>
+            <div class="booking-actions-col">
+              <div>
+                <div class="booking-amount">₹${total}</div>
+                <div class="booking-amount-label">${seatIds.length} ticket(s)</div>
+              </div>
+            </div>
+          </div>
+          <div class="booking-card__footer">
+            <div class="booking-id-row">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              Booking ID: <span class="booking-id-val" data-copy="${bookingId}">${bookingId}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor:pointer;color:var(--color-text-muted)"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function updateStats(bookings) {
+      const confirmed = bookings.filter(b => (b.bookingStatus || b.status) !== 'CANCELLED');
+      const totalSpent = bookings.reduce((s, b) => s + (b.amount || b.total || 0), 0);
+      const totalSeats = bookings.reduce((s, b) => {
+        const ids = typeof b.seatIds === 'string' ? b.seatIds.split(',') : (b.seats || []);
+        return s + ids.length;
+      }, 0);
+
+      document.getElementById('statTotal').textContent     = bookings.length;
+      document.getElementById('statConfirmed').textContent = confirmed.length;
+      document.getElementById('statSpent').textContent     = `₹${totalSpent.toLocaleString('en-IN')}`;
+      document.getElementById('statSeats').textContent     = totalSeats;
+    }
+
+    function renderList(filter = 'all') {
+      const listEl = document.getElementById('bookingsList');
+      const filtered = filter === 'all'
+        ? allBookings
+        : allBookings.filter(b => {
+            const st = b.bookingStatus || b.status || '';
+            return st === filter.toUpperCase();
+          });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="bookings-empty">
+            <div class="bookings-empty-icon">🎬</div>
+            <div class="bookings-empty-title">No bookings found</div>
+            <div class="bookings-empty-desc">
+              ${filter === 'all' ? "You haven't made any bookings yet." : `No ${filter} bookings.`}
+            </div>
+            <a href="movies.html" class="btn btn--primary">Browse Movies</a>
+          </div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(renderBookingCard).join('');
+
+      listEl.querySelectorAll('[data-copy]').forEach(el => {
+        el.addEventListener('click', async () => {
+          await copyToClipboard(el.dataset.copy);
+          toast.success('Booking ID copied!');
+        });
+      });
+    }
+
+    async function init() {
+      try {
+        const user = Auth.getUser();
+        const userId = user?.userId || user?.id;
+        if (userId) {
+          allBookings = await ApiClient.get(`${API.BOOKINGS.MY_BOOKINGS}?userId=${userId}`, true);
+        }
+      } catch {
+        allBookings = [];
+      }
+
+      if (!Array.isArray(allBookings)) allBookings = [];
+
+      updateStats(allBookings);
+      renderList('all');
+
+      document.querySelectorAll('.booking-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          activeTab = tab.dataset.tab;
+          document.querySelectorAll('.booking-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected','true');
+          renderList(activeTab);
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

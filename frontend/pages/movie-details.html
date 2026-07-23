@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Details – MovieHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/components/navbar.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/toast.css" />
+  <link rel="stylesheet" href="../css/components/modals.css" />
+  <link rel="stylesheet" href="../css/components/footer.css" />
+  <style>
+    body { padding-top: var(--navbar-height); }
+
+    /* MOVIE BANNER */
+    .movie-banner {
+      position: relative;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    .movie-banner__backdrop {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(2px);
+      transform: scale(1.05);
+      transition: opacity 0.8s;
+    }
+
+    .movie-banner__gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--color-bg) 0%, rgba(15,17,21,0.7) 50%, rgba(15,17,21,0.5) 100%);
+    }
+
+    .movie-banner__content {
+      position: relative;
+      z-index: 2;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-12) var(--container-padding) var(--space-10);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-10);
+      align-items: flex-end;
+    }
+
+    .movie-poster-large {
+      width: 240px;
+      aspect-ratio: 2/3;
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-2xl), 0 0 60px rgba(0,0,0,0.5);
+      border: 2px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+      transition: transform var(--transition-base);
+    }
+
+    .movie-poster-large:hover { transform: scale(1.02); }
+
+    .movie-poster-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .movie-info-header h1 {
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-black);
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .movie-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+
+    .movie-meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .movie-rating-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: var(--radius-full);
+      color: var(--color-gold);
+      font-weight: var(--weight-bold);
+      font-size: var(--text-base);
+    }
+
+    .imdb-badge {
+      padding: 4px 10px;
+      background: #F5C518;
+      color: #000;
+      font-weight: var(--weight-black);
+      font-size: var(--text-sm);
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.02em;
+    }
+
+    .movie-genre-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+
+    .movie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+
+    /* DETAILS SECTIONS */
+    .movie-details-container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--container-padding) var(--section-spacing);
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-10);
+      margin-top: var(--space-10);
+    }
+
+    .movie-details-main {}
+    .movie-details-sidebar {}
+
+    /* Description */
+    .detail-section {
+      margin-bottom: var(--space-10);
+    }
+
+    .detail-section h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-4);
+      color: var(--color-accent);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .detail-section h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-card-border);
+      margin-left: var(--space-4);
+    }
+
+    .description-text {
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+    }
+
+    /* Cast */
+    .cast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .cast-card {
+      text-align: center;
+    }
+
+    .cast-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin: 0 auto var(--space-2);
+      background: var(--color-bg-secondary);
+      border: 2px solid var(--color-card-border);
+    }
+
+    .cast-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cast-name {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--color-accent);
+      margin-bottom: 2px;
+    }
+
+    .cast-role {
+      font-size: 10px;
+      color: var(--color-text-muted);
+    }
+
+    /* Shows section */
+    .show-time-group {
+      margin-bottom: var(--space-6);
+    }
+
+    .show-time-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .theatre-row {
+      background: var(--color-card);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-card-border);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      transition: all var(--transition-fast);
+    }
+
+    .theatre-row:hover {
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: var(--shadow-md);
+    }
+
+    .theatre-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-4);
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .theatre-row-name {
+      font-weight: var(--weight-semibold);
+      color: var(--color-accent);
+    }
+
+    .theatre-row-location {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .show-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .show-time-btn {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--color-success);
+      background: transparent;
+      color: var(--color-success);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .show-time-btn:hover {
+      background: var(--color-success-light);
+      transform: translateY(-1px);
+    }
+
+    .show-time-btn .price {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-regular);
+    }
+
+    .show-time-btn.fast-filling {
+      border-color: var(--color-warning);
+      color: var(--color-warning);
+    }
+
+    .show-time-btn.fast-filling:hover { background: var(--color-warning-light); }
+
+    /* Sidebar */
+    .booking-sidebar-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      position: sticky;
+      top: calc(var(--navbar-height) + 1rem);
+    }
+
+    .sidebar-header {
+      padding: var(--space-5);
+      background: linear-gradient(135deg, var(--color-primary-glow), transparent);
+      border-bottom: 1px solid var(--color-card-border);
+    }
+
+    .sidebar-movie-info {
+      display: flex;
+      gap: var(--space-3);
+    }
+
+    .sidebar-poster {
+      width: 64px;
+      height: 96px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .sidebar-poster img { width: 100%; height: 100%; object-fit: cover; }
+
+    .sidebar-movie-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--color-accent);
+      margin-bottom: var(--space-2);
+    }
+
+    .sidebar-body { padding: var(--space-5); }
+
+    .date-selector {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      padding-bottom: var(--space-2);
+      scrollbar-width: none;
+    }
+
+    .date-selector::-webkit-scrollbar { display: none; }
+
+    .date-btn {
+      flex-shrink: 0;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-lg);
+      border: 1.5px solid var(--glass-border);
+      background: transparent;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+      min-width: 54px;
+    }
+
+    .date-btn .day-num { font-size: var(--text-base); font-weight: var(--weight-bold); display: block; }
+    .date-btn .day-name { font-size: 10px; text-transform: uppercase; }
+
+    .date-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .date-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    .sidebar-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin: var(--space-4) 0 var(--space-3);
+    }
+
+    .mini-show-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .mini-time-btn {
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--color-success);
+      color: var(--color-success);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      cursor: pointer;
+      background: transparent;
+      transition: all var(--transition-fast);
+    }
+
+    .mini-time-btn:hover { background: var(--color-success-light); }
+    .mini-time-btn.selected { background: var(--color-success); color: white; }
+
+    .sidebar-footer {
+      padding: var(--space-5);
+      border-top: 1px solid var(--color-card-border);
+    }
+
+    @media (max-width: 1024px) {
+      .movie-details-container { grid-template-columns: 1fr; }
+      .movie-details-sidebar { order: -1; }
+    }
+
+    @media (max-width: 768px) {
+      .movie-banner__content { grid-template-columns: 1fr; }
+      .movie-poster-large { width: 160px; margin: 0 auto; }
+      .movie-info-header { text-align: center; }
+      .movie-meta-row { justify-content: center; }
+      .movie-genre-list { justify-content: center; }
+      .movie-actions { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar">
+    <div class="navbar__container">
+      <div class="navbar__left">
+        <a href="../index.html" class="navbar__logo" aria-label="MovieHub Home">
+          <span class="logo-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg></span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <nav class="navbar__nav" id="navLinks">
+          <a href="../index.html" class="nav-link" id="nav-home">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="movies.html" class="nav-link active" id="nav-movies">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="m7 2 0 20M17 2l0 20M2 12h20"/></svg>
+            Movies
+          </a>
+          <a href="booking-history.html" class="nav-link" id="nav-history">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Booking History
+          </a>
+        </nav>
+      </div>
+      <div class="navbar__center">
+        <div class="search-bar" role="search">
+          <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" id="globalSearch" class="search-input" placeholder="Search movies..." aria-label="Search movies" />
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+      </div>
+      <div class="navbar__right">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </button>
+        <div class="user-menu-wrapper" id="userMenuWrapper">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User menu" aria-expanded="false">
+            <div class="user-avatar" id="userAvatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <span class="user-name" id="userDisplayName">Sign In</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-header">
+              <div class="dropdown-avatar" id="dropdownAvatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <div><div class="dropdown-name" id="dropdownName">Guest User</div><div class="dropdown-email" id="dropdownEmail">Sign in to continue</div></div>
+            </div>
+            <hr class="dropdown-divider"/>
+            <a href="profile.html" class="dropdown-item" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
+            <a href="booking-history.html" class="dropdown-item" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg> My Bookings</a>
+            <hr class="dropdown-divider"/>
+            <button class="dropdown-item dropdown-item--danger" id="logoutBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
+            <a href="login.html" class="dropdown-item auth-link" id="loginLink"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In</a>
+          </div>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
+    <nav class="mobile-menu">
+      <div class="mobile-menu-header">
+        <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <a href="../index.html" class="mobile-nav-link">🏠 Home</a>
+      <a href="movies.html" class="mobile-nav-link">🎬 Movies</a>
+      <a href="booking-history.html" class="mobile-nav-link">🎟️ Booking History</a>
+      <a href="login.html" class="mobile-nav-link mobile-auth-link" id="mobileLoginLink">🔑 Sign In</a>
+    </nav>
+  </div>
+
+  <aside class="notification-panel" id="notifPanel" aria-hidden="true">
+    <div class="notif-header"><h3>Notifications</h3><button class="mark-all-read" id="markAllRead">Mark all read</button></div>
+    <div class="notif-list" id="notifList"></div>
+  </aside>
+
+  <main id="mainContent">
+
+    <!-- MOVIE BANNER -->
+    <section class="movie-banner" id="movieBanner" aria-label="Movie details">
+      <div class="movie-banner__backdrop" id="bannerBackdrop"></div>
+      <div class="movie-banner__gradient"></div>
+      <div class="movie-banner__content">
+        <div class="movie-poster-large" id="moviePoster">
+          <div class="hero__poster-skeleton" style="width:100%;height:100%"></div>
+        </div>
+        <div class="movie-info-header" id="movieInfoHeader">
+          <!-- Filled by JS -->
+          <div class="skeleton-text skeleton-title" style="width:70%;margin-bottom:1rem"></div>
+          <div class="skeleton-text" style="width:40%;margin-bottom:0.5rem"></div>
+          <div class="skeleton-text" style="width:55%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN DETAILS -->
+    <div class="movie-details-container" id="movieDetailsContainer">
+      <div class="movie-details-main" id="movieDetailsMain">
+        <!-- Description -->
+        <div class="detail-section" id="descSection">
+          <h2>Synopsis</h2>
+          <p class="description-text" id="movieDescription">
+            <span class="skeleton-text" style="width:90%;margin-bottom:6px"></span>
+            <span class="skeleton-text" style="width:80%;margin-bottom:6px"></span>
+            <span class="skeleton-text" style="width:70%"></span>
+          </p>
+        </div>
+
+        <!-- Cast -->
+        <div class="detail-section" id="castSection">
+          <h2>Cast</h2>
+          <div class="cast-grid" id="castGrid">
+            <div class="cast-card"><div class="cast-avatar skeleton" style="width:70px;height:70px;border-radius:50%;margin:0 auto 8px"></div></div>
+            <div class="cast-card"><div class="cast-avatar skeleton" style="width:70px;height:70px;border-radius:50%;margin:0 auto 8px"></div></div>
+            <div class="cast-card"><div class="cast-avatar skeleton" style="width:70px;height:70px;border-radius:50%;margin:0 auto 8px"></div></div>
+            <div class="cast-card"><div class="cast-avatar skeleton" style="width:70px;height:70px;border-radius:50%;margin:0 auto 8px"></div></div>
+            <div class="cast-card"><div class="cast-avatar skeleton" style="width:70px;height:70px;border-radius:50%;margin:0 auto 8px"></div></div>
+          </div>
+        </div>
+
+        <!-- Shows -->
+        <div class="detail-section" id="showsSection">
+          <h2>Available Shows</h2>
+
+          <div class="show-time-group" id="morningShows">
+            <div class="show-time-label">🌅 Morning Shows</div>
+            <div id="morningTheatres"></div>
+          </div>
+          <div class="show-time-group" id="afternoonShows">
+            <div class="show-time-label">☀️ Afternoon Shows</div>
+            <div id="afternoonTheatres"></div>
+          </div>
+          <div class="show-time-group" id="eveningShows">
+            <div class="show-time-label">🌆 Evening Shows</div>
+            <div id="eveningTheatres"></div>
+          </div>
+          <div class="show-time-group" id="nightShows">
+            <div class="show-time-label">🌙 Night Shows</div>
+            <div id="nightTheatres"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="movie-details-sidebar">
+        <div class="booking-sidebar-card">
+          <div class="sidebar-header">
+            <div class="sidebar-movie-info">
+              <div class="sidebar-poster" id="sidebarPoster">
+                <div class="skeleton" style="width:100%;height:100%"></div>
+              </div>
+              <div>
+                <div class="sidebar-movie-title" id="sidebarTitle">Loading...</div>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px" id="sidebarGenres"></div>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-body">
+            <div class="sidebar-label">Select Date</div>
+            <div class="date-selector" id="datePicker"></div>
+            <div class="sidebar-label">Select Show</div>
+            <div class="mini-show-times" id="miniShowTimes"></div>
+          </div>
+          <div class="sidebar-footer">
+            <button class="btn btn--primary btn--full btn--lg" id="proceedBtn" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+              Select Seats
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- TRAILER MODAL -->
+  <div class="modal-overlay" id="trailerModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal modal--video">
+      <button class="modal__close" id="trailerClose" aria-label="Close trailer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__video-container">
+        <iframe id="trailerFrame" src="" title="Trailer" allowfullscreen frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script type="module" src="../js/api/config.js"></script>
+  <script type="module" src="../js/utils/auth.js"></script>
+  <script type="module" src="../js/utils/toast.js"></script>
+  <script type="module" src="../js/utils/helpers.js"></script>
+  <script type="module" src="../js/components/navbar.js"></script>
+  <script type="module">
+    import { API, ApiClient } from '../js/api/config.js';
+    import Auth from '../js/utils/auth.js';
+    import toast from '../js/utils/toast.js';
+    import { formatTime, formatDate, formatDuration } from '../js/utils/helpers.js';
+
+    const GENRE_COLORS = {
+      'Action':'badge--red','Thriller':'badge--warning','Drama':'badge--info',
+      'Sci-Fi':'badge--primary','Comedy':'badge--success','Horror':'badge--ghost',
+      'Fantasy':'badge--gold','Romance':'badge--red','Adventure':'badge--success',
+    };
+
+    let selectedDate = null;
+    let selectedShow = null;
+    let currentMovie = null;
+    let screensCache = null;
+
+    function getMovieId() {
+      return new URLSearchParams(window.location.search).get('id');
+    }
+
+    function normalizeMovie(m) {
+      return {
+        ...m,
+        posterUrl: m.posterUrl || m.poster || '',
+        backdropUrl: m.backdropUrl || m.backdrop || '',
+        duration: m.duration ? (typeof m.duration === 'number' ? formatDuration(m.duration) : m.duration) : '',
+        releaseDate: m.releaseDate || m.release_date || '',
+        genre: typeof m.genre === 'string' ? m.genre.split(',').map(g => g.trim()).filter(Boolean) : (m.genre || []),
+        trailerUrl: m.trailerUrl || '',
+        description: m.description || '',
+      };
+    }
+
+    async function getScreens() {
+      if (screensCache) return screensCache;
+      try {
+        screensCache = await ApiClient.get(API.SCREENS.ALL, false);
+        return screensCache;
+      } catch {
+        screensCache = [];
+        return screensCache;
+      }
+    }
+
+    async function renderBanner(movie) {
+      const backdrop = document.getElementById('bannerBackdrop');
+      const poster   = document.getElementById('moviePoster');
+      const infoHeader = document.getElementById('movieInfoHeader');
+
+      if (backdrop) backdrop.style.backgroundImage = `url('${movie.backdropUrl}')`;
+      if (poster) poster.innerHTML = `<img src="${movie.posterUrl}" alt="${movie.title}" loading="eager" />`;
+      document.title = `${movie.title} – MovieHub`;
+
+      if (infoHeader) {
+        infoHeader.innerHTML = `
+          <nav style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)">
+            <a href="../index.html" style="color:var(--color-text-muted)">Home</a>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <a href="movies.html" style="color:var(--color-text-muted)">Movies</a>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <span style="color:var(--color-primary)">${movie.title}</span>
+          </nav>
+          <h1>${movie.title}</h1>
+          <div class="movie-meta-row">
+            <div class="movie-rating-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              ${movie.rating} / 10
+            </div>
+            <span class="imdb-badge">IMDb</span>
+            <span class="movie-meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${movie.duration}
+            </span>
+            <span class="movie-meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              ${movie.releaseDate ? new Date(movie.releaseDate).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}) : 'Now Showing'}
+            </span>
+            <span class="movie-meta-item">${movie.language}</span>
+          </div>
+          <div class="movie-genre-list">
+            ${movie.genre.map(g=>`<span class="badge ${GENRE_COLORS[g]||'badge--ghost'}">${g}</span>`).join('')}
+          </div>
+          <div class="movie-actions">
+            ${movie.trailerUrl ? `<button class="btn btn--outline btn--lg" id="watchTrailerBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Watch Trailer
+            </button>` : ''}
+            <button class="btn btn--primary btn--lg" id="bookNowBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+              Book Tickets
+            </button>
+          </div>
+        `;
+        document.getElementById('watchTrailerBtn')?.addEventListener('click', () => openTrailer(movie.trailerUrl));
+        document.getElementById('bookNowBtn')?.addEventListener('click', () => scrollToShows());
+      }
+    }
+
+    function getTimePeriod(startTime) {
+      const h = parseInt(startTime.split(':')[0], 10);
+      if (h < 12) return 'morning';
+      if (h < 17) return 'afternoon';
+      if (h < 21) return 'evening';
+      return 'night';
+    }
+
+    function renderShows(shows) {
+      const screens = screensCache || [];
+      const periods = ['morning', 'afternoon', 'evening', 'night'];
+      const periodLabels = { morning: 'Morning Shows', afternoon: 'Afternoon Shows', evening: 'Evening Shows', night: 'Night Shows' };
+
+      periods.forEach(period => {
+        const container = document.getElementById(`${period}Theatres`);
+        if (!container) return;
+
+        const periodShows = shows.filter(s => getTimePeriod(s.startTime) === period);
+        if (periodShows.length === 0) {
+          container.innerHTML = '<p style="color:var(--color-text-muted);font-size:var(--text-sm)">No shows available</p>';
+          return;
+        }
+
+        const theatreGroups = {};
+        periodShows.forEach(s => {
+          const screen = screens.find(sc => sc.id === s.screenId) || {};
+          const key = screen.theatreName || 'Unknown Theatre';
+          if (!theatreGroups[key]) theatreGroups[key] = { location: screen.location || '', shows: [] };
+          theatreGroups[key].shows.push(s);
+        });
+
+        container.innerHTML = Object.entries(theatreGroups).map(([theatre, data]) => `
+          <div class="theatre-row">
+            <div class="theatre-row-header">
+              <div>
+                <div class="theatre-row-name">${theatre}</div>
+                <div class="theatre-row-location">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  ${data.location}
+                </div>
+              </div>
+              <span class="badge badge--ghost">M-Ticket Available</span>
+            </div>
+            <div class="show-times">
+              ${data.shows.map(s => `
+                <button class="show-time-btn"
+                  data-show-id="${s.id}" data-start="${s.startTime}" data-end="${s.endTime}"
+                  aria-label="Show at ${s.startTime}">
+                  ${formatTime(s.startTime)}
+                  <span class="price">₹${s.price}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+
+        container.querySelectorAll('.show-time-btn').forEach(btn => {
+          btn.addEventListener('click', () => selectShow(btn.dataset.showId, btn.dataset.start));
+        });
+      });
+    }
+
+    function selectShow(showId, time) {
+      selectedShow = showId;
+      document.querySelectorAll('.show-time-btn').forEach(b => {
+        b.style.background = '';
+        b.style.color = '';
+      });
+      const selected = document.querySelector(`.show-time-btn[data-show-id="${showId}"]`);
+      if (selected) {
+        selected.style.background = 'var(--color-primary)';
+        selected.style.borderColor = 'var(--color-primary)';
+        selected.style.color = 'white';
+      }
+      updateProceedBtn();
+      scrollTo('#mainContent', 80);
+    }
+
+    function renderSidebar(movie) {
+      const sidebarPoster = document.getElementById('sidebarPoster');
+      const sidebarTitle  = document.getElementById('sidebarTitle');
+      const sidebarGenres = document.getElementById('sidebarGenres');
+
+      if (sidebarPoster) sidebarPoster.innerHTML = `<img src="${movie.posterUrl}" alt="${movie.title}" loading="lazy" />`;
+      if (sidebarTitle) sidebarTitle.textContent = movie.title;
+      if (sidebarGenres) sidebarGenres.innerHTML = movie.genre.slice(0,2).map(g=>`<span class="badge badge--xs ${GENRE_COLORS[g]||'badge--ghost'}">${g}</span>`).join('');
+      renderDatePicker();
+    }
+
+    function renderDatePicker() {
+      const picker = document.getElementById('datePicker');
+      if (!picker) return;
+      const today = new Date();
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      picker.innerHTML = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const isToday = i === 0;
+        return `<button class="date-btn${isToday ? ' active' : ''}" data-date="${d.toISOString().split('T')[0]}">
+          <span class="day-num">${d.getDate()}</span>
+          <span class="day-name">${isToday ? 'Today' : days[d.getDay()]}</span>
+        </button>`;
+      }).join('');
+      selectedDate = today.toISOString().split('T')[0];
+      picker.querySelectorAll('.date-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          picker.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedDate = btn.dataset.date;
+          updateProceedBtn();
+        });
+      });
+    }
+
+    function updateProceedBtn() {
+      const btn = document.getElementById('proceedBtn');
+      if (btn) btn.disabled = !(selectedDate && selectedShow);
+    }
+
+    function scrollToShows() {
+      const el = document.getElementById('showsSection');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openTrailer(url) {
+      const modal = document.getElementById('trailerModal');
+      const frame = document.getElementById('trailerFrame');
+      if (!modal || !frame || !url) return;
+      const embedUrl = url.replace('watch?v=', 'embed/').replace('youtu.be/', 'www.youtube.com/embed/');
+      frame.src = embedUrl + '?autoplay=1&rel=0';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      const close = document.getElementById('trailerClose');
+      const closeModal = () => { modal.classList.remove('open'); frame.src = ''; };
+      close?.addEventListener('click', closeModal, { once: true });
+      modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    }
+
+    document.getElementById('proceedBtn')?.addEventListener('click', () => {
+      if (!Auth.isAuthenticated()) {
+        toast.warning('Please sign in to book tickets.');
+        setTimeout(() => window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`, 1500);
+        return;
+      }
+      const movieId = getMovieId();
+      window.location.href = `seat-selection.html?movieId=${movieId}&showId=${selectedShow}&date=${selectedDate}`;
+    });
+
+    async function init() {
+      const movieId = getMovieId();
+      if (!movieId) { window.location.href = 'movies.html'; return; }
+
+      try {
+        const rawMovie = await ApiClient.get(API.MOVIES.BY_ID(movieId), false);
+        currentMovie = normalizeMovie(rawMovie);
+      } catch {
+        toast.error('Movie not found');
+        setTimeout(() => window.location.href = 'movies.html', 1500);
+        return;
+      }
+
+      renderBanner(currentMovie);
+      const descEl = document.getElementById('movieDescription');
+      if (descEl) descEl.textContent = currentMovie.description;
+      document.getElementById('castSection')?.remove();
+
+      try {
+        const shows = await ApiClient.get(API.SHOWS.BY_MOVIE(movieId), false);
+        await getScreens();
+        renderShows(shows);
+      } catch {
+        document.querySelectorAll('.show-time-group').forEach(g => {
+          g.querySelector('div') ? g.querySelector('div').innerHTML = '<p style="color:var(--color-text-muted)">Unable to load shows</p>' : '';
+        });
+      }
+
+      renderSidebar(currentMovie);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

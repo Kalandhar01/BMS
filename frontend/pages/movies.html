@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse all movies on MovieHub. Filter by genre, language, rating and book tickets instantly." />
+  <title>Movies – MovieHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/base/variables.css" />
+  <link rel="stylesheet" href="../css/base/reset.css" />
+  <link rel="stylesheet" href="../css/base/typography.css" />
+  <link rel="stylesheet" href="../css/components/navbar.css" />
+  <link rel="stylesheet" href="../css/components/cards.css" />
+  <link rel="stylesheet" href="../css/components/buttons.css" />
+  <link rel="stylesheet" href="../css/components/badges.css" />
+  <link rel="stylesheet" href="../css/components/skeleton.css" />
+  <link rel="stylesheet" href="../css/components/toast.css" />
+  <link rel="stylesheet" href="../css/components/modals.css" />
+  <link rel="stylesheet" href="../css/components/footer.css" />
+  <link rel="stylesheet" href="../css/pages/movies.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="navbar__container">
+      <div class="navbar__left">
+        <a href="../index.html" class="navbar__logo" aria-label="MovieHub Home">
+          <span class="logo-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg>
+          </span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <nav class="navbar__nav" id="navLinks" role="navigation" aria-label="Main navigation">
+          <a href="../index.html" class="nav-link" id="nav-home">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="movies.html" class="nav-link active" id="nav-movies">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="m7 2 0 20M17 2l0 20M2 12h20"/></svg>
+            Movies
+          </a>
+          <a href="booking-history.html" class="nav-link" id="nav-history">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Booking History
+          </a>
+        </nav>
+      </div>
+      <div class="navbar__center">
+        <div class="search-bar" id="searchBar" role="search">
+          <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" id="globalSearch" class="search-input" placeholder="Search movies..." aria-label="Search movies" />
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+      </div>
+      <div class="navbar__right">
+        <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </button>
+        <div class="user-menu-wrapper" id="userMenuWrapper">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User menu" aria-expanded="false">
+            <div class="user-avatar" id="userAvatar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span class="user-name" id="userDisplayName">Sign In</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-header">
+              <div class="dropdown-avatar" id="dropdownAvatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div class="dropdown-name" id="dropdownName">Guest User</div>
+                <div class="dropdown-email" id="dropdownEmail">Sign in to continue</div>
+              </div>
+            </div>
+            <hr class="dropdown-divider"/>
+            <a href="profile.html" class="dropdown-item" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              My Profile
+            </a>
+            <a href="booking-history.html" class="dropdown-item" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/></svg>
+              My Bookings
+            </a>
+            <hr class="dropdown-divider"/>
+            <button class="dropdown-item dropdown-item--danger" id="logoutBtn" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Logout
+            </button>
+            <a href="login.html" class="dropdown-item auth-link" id="loginLink" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In
+            </a>
+          </div>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true">
+    <nav class="mobile-menu">
+      <div class="mobile-menu-header">
+        <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="movies.html" class="mobile-nav-link">Movies</a>
+      <a href="booking-history.html" class="mobile-nav-link">Booking History</a>
+      <a href="profile.html" class="mobile-nav-link">Profile</a>
+      <a href="login.html" class="mobile-nav-link mobile-auth-link" id="mobileLoginLink">Sign In</a>
+    </nav>
+  </div>
+
+  <aside class="notification-panel" id="notifPanel" aria-hidden="true">
+    <div class="notif-header">
+      <h3>Notifications</h3>
+      <button class="mark-all-read" id="markAllRead">Mark all read</button>
+    </div>
+    <div class="notif-list" id="notifList"></div>
+  </aside>
+
+  <main id="mainContent">
+
+    <!-- PAGE HEADER + FILTERS (merged) -->
+    <div class="page-top">
+      <div class="page-top__inner">
+
+        <div class="page-top__head">
+          <h1 class="page-top__title">Movies</h1>
+          <p class="page-top__sub">Discover, filter, and book tickets for the latest releases</p>
+        </div>
+
+        <div class="page-top__filters">
+
+          <div class="filter-pills">
+            <div class="pill-dropdown">
+              <button class="pill-btn" data-dropdown="genre" aria-expanded="false">
+                <span id="genreLabel">All Genres</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+              </button>
+              <div class="pill-menu" id="genreMenu" role="menu">
+                <button class="pill-option active" data-value="" role="menuitem">All Genres</button>
+                <button class="pill-option" data-value="Action" role="menuitem">Action</button>
+                <button class="pill-option" data-value="Comedy" role="menuitem">Comedy</button>
+                <button class="pill-option" data-value="Drama" role="menuitem">Drama</button>
+                <button class="pill-option" data-value="Horror" role="menuitem">Horror</button>
+                <button class="pill-option" data-value="Thriller" role="menuitem">Thriller</button>
+                <button class="pill-option" data-value="Sci-Fi" role="menuitem">Sci-Fi</button>
+                <button class="pill-option" data-value="Fantasy" role="menuitem">Fantasy</button>
+                <button class="pill-option" data-value="Romance" role="menuitem">Romance</button>
+                <button class="pill-option" data-value="Adventure" role="menuitem">Adventure</button>
+              </div>
+            </div>
+
+            <div class="pill-dropdown">
+              <button class="pill-btn" data-dropdown="lang" aria-expanded="false">
+                <span id="langLabel">All Languages</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+              </button>
+              <div class="pill-menu" id="langMenu" role="menu">
+                <button class="pill-option active" data-value="" role="menuitem">All Languages</button>
+                <button class="pill-option" data-value="English" role="menuitem">English</button>
+                <button class="pill-option" data-value="Hindi" role="menuitem">Hindi</button>
+                <button class="pill-option" data-value="Tamil" role="menuitem">Tamil</button>
+                <button class="pill-option" data-value="Telugu" role="menuitem">Telugu</button>
+                <button class="pill-option" data-value="Malayalam" role="menuitem">Malayalam</button>
+              </div>
+            </div>
+
+            <div class="pill-dropdown">
+              <button class="pill-btn" data-dropdown="rating" aria-expanded="false">
+                <span id="ratingLabel">Min Rating</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+              </button>
+              <div class="pill-menu" id="ratingMenu" role="menu">
+                <button class="pill-option active" data-value="" role="menuitem">Any Rating</button>
+                <button class="pill-option" data-value="9" role="menuitem">9+</button>
+                <button class="pill-option" data-value="8" role="menuitem">8+</button>
+                <button class="pill-option" data-value="7" role="menuitem">7+</button>
+                <button class="pill-option" data-value="6" role="menuitem">6+</button>
+              </div>
+            </div>
+
+            <div class="pill-dropdown">
+              <button class="pill-btn" data-dropdown="sort" aria-expanded="false">
+                <span id="sortLabel">Sort: Popularity</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+              </button>
+              <div class="pill-menu" id="sortMenu" role="menu">
+                <button class="pill-option active" data-value="popularity" role="menuitem">Popularity</button>
+                <button class="pill-option" data-value="rating" role="menuitem">Rating</button>
+                <button class="pill-option" data-value="release_date" role="menuitem">Release Date</button>
+                <button class="pill-option" data-value="title" role="menuitem">Title A-Z</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="filter-clear" id="clearFiltersBtn" title="Clear all filters">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Clear
+          </button>
+        </div>
+
+        <div class="page-top__chips">
+          <button class="category-chip active" data-filter="all" aria-pressed="true">All</button>
+          <button class="category-chip" data-filter="trending" aria-pressed="false">Trending</button>
+          <button class="category-chip" data-filter="popular" aria-pressed="false">Popular</button>
+          <button class="category-chip" data-filter="upcoming" aria-pressed="false">Upcoming</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="movies-content">
+
+      <div class="results-bar">
+        <p class="results-bar__count">
+          <strong id="resultsCount">0</strong> movies
+        </p>
+        <div class="results-bar__sort">
+          <span class="results-bar__sep">|</span>
+          <span class="results-bar__label">sorted by</span>
+          <span class="results-bar__value" id="sortValue">Popularity</span>
+        </div>
+      </div>
+
+      <div class="movie-grid" id="moviesGrid" role="list" aria-label="Movie listings" aria-live="polite">
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        <div class="movie-card skeleton-card" aria-hidden="true"></div>
+      </div>
+
+      <nav class="pagination" id="pagination" aria-label="Movie pages">
+        <button class="pagination__arrow" id="prevPage" aria-label="Previous page" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div id="paginationPages" class="pagination__pages"></div>
+        <button class="pagination__arrow" id="nextPage" aria-label="Next page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </nav>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__container">
+      <div class="footer__brand">
+        <a href="../index.html" class="navbar__logo">
+          <span class="logo-icon"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg></span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <p class="footer__tagline">Your ultimate movie experience starts here.</p>
+        <div class="footer__socials">
+          <a href="#" class="social-link" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.258 5.639L18.244 2.25z"/></svg></a>
+          <a href="#" class="social-link" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        </div>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col"><h4>Company</h4><a href="#">About Us</a><a href="#">Careers</a></div>
+        <div class="footer__col"><h4>Support</h4><a href="#">Contact Us</a><a href="#">FAQ</a></div>
+        <div class="footer__col"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms</a></div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2025 MovieHub. All rights reserved.</p>
+      <p class="footer__tech">Powered by Spring Boot Microservices</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { API, ApiClient } from '../js/api/config.js';
+    import Auth from '../js/utils/auth.js';
+    import toast from '../js/utils/toast.js';
+    import { debounce, initLazyLoad, initScrollAnimations } from '../js/utils/helpers.js';
+
+    const GENRE_COLORS = {
+      'Action':'badge--red','Thriller':'badge--warning','Drama':'badge--info',
+      'Sci-Fi':'badge--primary','Comedy':'badge--success','Horror':'badge--ghost',
+      'Fantasy':'badge--gold','Romance':'badge--red','Adventure':'badge--success',
+    };
+
+    let allMovies = [];
+    let filteredMovies = [];
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 12;
+    let activeFilter = 'all';
+
+    function normalizeMovie(m) {
+      return {
+        ...m,
+        posterUrl: m.posterUrl || m.poster || '',
+        backdropUrl: m.backdropUrl || m.backdrop || '',
+        duration: m.duration || '',
+        releaseDate: m.releaseDate || m.release_date || '',
+        genre: typeof m.genre === 'string' ? m.genre.split(',').map(g => g.trim()).filter(Boolean) : (m.genre || []),
+        rating: m.rating || 0,
+        language: m.language || '',
+      };
+    }
+
+    function renderMovieCard(raw, index) {
+      const m = normalizeMovie(raw);
+      const genres = m.genre.slice(0, 2);
+      return `
+        <article class="movie-card" role="listitem" style="animation-delay:${index*50}ms"
+          data-movie-id="${m.id}" tabindex="0" aria-label="${m.title}">
+          <div class="movie-card__poster">
+            <img data-src="${m.posterUrl}"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+              alt="Poster for ${m.title}" loading="lazy" />
+            ${m.trending
+              ? `<div class="movie-card__trending-badge">🔥 Hot</div>`
+              : `<div class="movie-card__rating-badge">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  ${m.rating}
+                 </div>`}
+            <button class="movie-card__wishlist" aria-label="Wishlist">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <div class="movie-card__overlay">
+              <button class="movie-card__quick-book" data-id="${m.id}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
+                Book Now
+              </button>
+            </div>
+          </div>
+          <div class="movie-card__body">
+            <h3 class="movie-card__title" title="${m.title}">${m.title}</h3>
+            <div class="movie-card__meta">
+              <span class="movie-card__meta-item">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                ${m.rating}
+              </span>
+              <span class="movie-card__meta-item">${m.language}</span>
+              <span class="movie-card__meta-item">${m.duration || '-'}m</span>
+            </div>
+            <div class="movie-card__genres">${genres.map(g => `<span class="badge badge--xs ${GENRE_COLORS[g]||'badge--ghost'}">${g}</span>`).join('')}</div>
+            <button class="movie-card__book-btn" data-id="${m.id}">Book Tickets</button>
+          </div>
+        </article>`;
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('moviesGrid');
+      if (!grid) return;
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const page  = filteredMovies.slice(start, start + ITEMS_PER_PAGE);
+      document.getElementById('resultsCount').textContent = filteredMovies.length;
+
+      if (page.length === 0) {
+        grid.innerHTML = `<div class="movies-empty">
+          <div class="movies-empty__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="m7 2 0 20M17 2l0 20M2 12h20"/></svg>
+          </div>
+          <p class="movies-empty__title">No movies found</p>
+          <p class="movies-empty__desc">Try adjusting your filters or search terms</p>
+          <button class="btn btn--primary btn--sm" id="clearFilters">Clear Filters</button>
+        </div>`;
+        document.getElementById('clearFilters')?.addEventListener('click', clearFilters);
+        return;
+      }
+
+      grid.innerHTML = page.map((m, i) => renderMovieCard(m, i)).join('');
+      initLazyLoad('[data-src]');
+
+      grid.querySelectorAll('[data-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!Auth.isAuthenticated()) {
+            toast.warning('Please sign in to book tickets.');
+            return;
+          }
+          window.location.href = `movie-details.html?id=${btn.dataset.id}`;
+        });
+      });
+
+      grid.querySelectorAll('.movie-card__wishlist').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          btn.classList.toggle('active');
+          toast.success(btn.classList.contains('active') ? 'Added to watchlist!' : 'Removed from watchlist');
+        });
+      });
+
+      grid.querySelectorAll('.movie-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('button')) return;
+          window.location.href = `movie-details.html?id=${card.dataset.movieId}`;
+        });
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(filteredMovies.length / ITEMS_PER_PAGE);
+      const pagesEl = document.getElementById('paginationPages');
+      document.getElementById('prevPage').disabled = currentPage === 1;
+      document.getElementById('nextPage').disabled = currentPage === totalPages || totalPages === 0;
+
+      if (totalPages <= 1) { pagesEl.innerHTML = ''; return; }
+
+      let items = [];
+      const addPage = (p, active) => {
+        items.push(`<button class="pagination__page${active ? ' active' : ''}" data-page="${p}">${p}</button>`);
+      };
+
+      if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) addPage(i, i === currentPage);
+      } else {
+        addPage(1, 1 === currentPage);
+        if (currentPage > 3) items.push('<span class="pagination__dots">...</span>');
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) addPage(i, i === currentPage);
+        if (currentPage < totalPages - 2) items.push('<span class="pagination__dots">...</span>');
+        addPage(totalPages, totalPages === currentPage);
+      }
+
+      pagesEl.innerHTML = items.join('');
+
+      pagesEl.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentPage = parseInt(btn.dataset.page);
+          renderGrid();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    }
+
+    function applyFilters() {
+      const searchEl = document.getElementById('globalSearch');
+      const search   = searchEl ? searchEl.value.toLowerCase().trim() : '';
+
+      const genre = document.querySelector('#genreMenu .pill-option.active')?.dataset?.value || '';
+      const language = document.querySelector('#langMenu .pill-option.active')?.dataset?.value || '';
+      const minRating = parseFloat(document.querySelector('#ratingMenu .pill-option.active')?.dataset?.value || '0');
+      const sort = document.querySelector('#sortMenu .pill-option.active')?.dataset?.value || 'popularity';
+
+      filteredMovies = allMovies.filter(m => {
+        const matchSearch = !search || m.title.toLowerCase().includes(search) ||
+          (m.genre||[]).some(g => g.toLowerCase().includes(search));
+        const matchGenre    = !genre    || (m.genre||[]).some(g => g.toLowerCase() === genre.toLowerCase());
+        const matchLanguage = !language || m.language?.toLowerCase() === language.toLowerCase();
+        const matchRating   = !minRating || m.rating >= minRating;
+        const matchFilter   =
+          activeFilter === 'all' ||
+          (activeFilter === 'trending' && m.trending) ||
+          (activeFilter === 'upcoming' && new Date(m.releaseDate) > new Date()) ||
+          (activeFilter === 'popular'  && m.rating >= 8);
+        return matchSearch && matchGenre && matchLanguage && matchRating && matchFilter;
+      });
+
+      filteredMovies.sort((a, b) => {
+        if (sort === 'rating')       return b.rating - a.rating;
+        if (sort === 'release_date') return new Date(b.releaseDate) - new Date(a.releaseDate);
+        if (sort === 'title')        return a.title.localeCompare(b.title);
+        return b.rating - a.rating;
+      });
+
+      document.getElementById('sortValue').textContent =
+        document.querySelector('#sortMenu .pill-option.active')?.textContent?.trim() || 'Popularity';
+
+      currentPage = 1;
+      renderGrid();
+    }
+
+    function clearFilters() {
+      document.querySelectorAll('.pill-option').forEach(o => o.classList.remove('active'));
+      document.querySelectorAll('.pill-menu .pill-option:first-child').forEach(o => o.classList.add('active'));
+      document.querySelectorAll('.pill-btn span').forEach((s, i) => {
+        const labels = ['All Genres', 'All Languages', 'Min Rating', 'Sort: Popularity'];
+        if (i < 4) s.textContent = labels[i];
+      });
+      document.querySelector('#genreMenu .pill-option[data-value=""]')?.classList.add('active');
+      document.querySelector('#langMenu .pill-option[data-value=""]')?.classList.add('active');
+      document.querySelector('#ratingMenu .pill-option[data-value=""]')?.classList.add('active');
+      document.querySelector('#sortMenu .pill-option[data-value="popularity"]')?.classList.add('active');
+      activeFilter = 'all';
+      document.querySelectorAll('.category-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.filter === 'all');
+        c.setAttribute('aria-pressed', String(c.dataset.filter === 'all'));
+      });
+      applyFilters();
+    }
+
+    function initPillDropdowns() {
+      document.querySelectorAll('.pill-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const menuId = btn.dataset.dropdown + 'Menu';
+          const menu = document.getElementById(menuId);
+          if (!menu) return;
+          const isOpen = menu.classList.contains('open');
+
+          document.querySelectorAll('.pill-menu.open').forEach(m => m.classList.remove('open'));
+          document.querySelectorAll('.pill-btn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+
+          if (!isOpen) {
+            menu.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+
+      document.querySelectorAll('.pill-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const menu = opt.closest('.pill-menu');
+          menu.querySelectorAll('.pill-option').forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+
+          const btn = document.querySelector(`[data-dropdown="${menu.id.replace('Menu', '')}"]`);
+          if (btn) {
+            const label = btn.querySelector('span');
+            if (label) label.textContent = opt.textContent.trim();
+            btn.setAttribute('aria-expanded', 'false');
+          }
+          menu.classList.remove('open');
+          applyFilters();
+        });
+      });
+
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.pill-menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.pill-btn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+      });
+    }
+
+    async function init() {
+      try {
+        allMovies = await ApiClient.get(API.MOVIES.ALL, false);
+      } catch {
+        allMovies = [];
+      }
+      allMovies = allMovies.map(normalizeMovie);
+      filteredMovies = [...allMovies];
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('filter')) {
+        activeFilter = params.get('filter');
+        document.querySelectorAll('.category-chip').forEach(c => {
+          c.classList.toggle('active', c.dataset.filter === activeFilter);
+          c.setAttribute('aria-pressed', String(c.dataset.filter === activeFilter));
+        });
+      }
+
+      initPillDropdowns();
+      applyFilters();
+
+      const debouncedSearch = debounce(applyFilters, 300);
+      const searchEl = document.getElementById('globalSearch');
+      if (searchEl) searchEl.addEventListener('input', debouncedSearch);
+
+      document.querySelectorAll('.category-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeFilter = chip.dataset.filter;
+          document.querySelectorAll('.category-chip').forEach(c => {
+            c.classList.toggle('active', c === chip);
+            c.setAttribute('aria-pressed', String(c === chip));
+          });
+          applyFilters();
+        });
+      });
+
+      document.getElementById('clearFiltersBtn')?.addEventListener('click', clearFilters);
+
+      document.getElementById('prevPage')?.addEventListener('click', () => {
+        if (currentPage > 1) { currentPage--; renderGrid(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+      document.getElementById('nextPage')?.addEventListener('click', () => {
+        const total = Math.ceil(filteredMovies.length / ITEMS_PER_PAGE);
+        if (currentPage < total) { currentPage++; renderGrid(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <script type="module" src="../js/components/navbar.js"></script>
+</body>
+</html>

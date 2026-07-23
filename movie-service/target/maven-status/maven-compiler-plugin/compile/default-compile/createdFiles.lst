@@ -1,0 +1,6 @@
+com/bookmyshow/movie/service/impl/MovieServiceImpl.class
+com/bookmyshow/movie/controller/MovieController.class
+com/bookmyshow/movie/entity/Movie.class
+com/bookmyshow/movie/repository/MovieRepository.class
+com/bookmyshow/movie/service/MovieService.class
+com/bookmyshow/movie/MovieServiceApplication.class

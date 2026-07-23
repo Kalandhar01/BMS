@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MovieHub – Book movie tickets online. Trending movies, upcoming releases, and exclusive shows near you." />
+  <title>MovieHub – Premium Movie Ticket Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base/variables.css" />
+  <link rel="stylesheet" href="css/base/reset.css" />
+  <link rel="stylesheet" href="css/base/typography.css" />
+  <link rel="stylesheet" href="css/components/navbar.css" />
+  <link rel="stylesheet" href="css/components/hero.css" />
+  <link rel="stylesheet" href="css/components/cards.css" />
+  <link rel="stylesheet" href="css/components/buttons.css" />
+  <link rel="stylesheet" href="css/components/badges.css" />
+  <link rel="stylesheet" href="css/components/skeleton.css" />
+  <link rel="stylesheet" href="css/components/toast.css" />
+  <link rel="stylesheet" href="css/components/modals.css" />
+  <link rel="stylesheet" href="css/components/footer.css" />
+  <link rel="stylesheet" href="css/pages/home.css" />
+</head>
+<body class="page-home">
+
+  <!-- STICKY NAVBAR -->
+  <header class="navbar" id="navbar" role="banner">
+    <div class="navbar__container">
+      <div class="navbar__left">
+        <a href="index.html" class="navbar__logo" aria-label="MovieHub Home">
+          <span class="logo-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg>
+          </span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <nav class="navbar__nav" id="navLinks" role="navigation" aria-label="Main navigation">
+          <a href="index.html" class="nav-link active" id="nav-home">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="pages/movies.html" class="nav-link" id="nav-movies">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="m7 2 0 20M17 2l0 20M2 12h20"/></svg>
+            Movies
+          </a>
+          <a href="pages/booking-history.html" class="nav-link" id="nav-history">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Booking History
+          </a>
+        </nav>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="navbar__center">
+        <div class="search-bar" id="searchBar" role="search">
+          <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" id="globalSearch" class="search-input" placeholder="Search movies, genres, languages..." aria-label="Search movies" autocomplete="off" />
+          <div class="search-filters">
+            <select id="filterLanguage" class="search-select" aria-label="Filter by language">
+              <option value="">Language</option>
+              <option value="english">English</option>
+              <option value="hindi">Hindi</option>
+              <option value="tamil">Tamil</option>
+              <option value="telugu">Telugu</option>
+            </select>
+            <select id="filterGenre" class="search-select" aria-label="Filter by genre">
+              <option value="">Genre</option>
+              <option value="action">Action</option>
+              <option value="drama">Drama</option>
+              <option value="comedy">Comedy</option>
+              <option value="thriller">Thriller</option>
+              <option value="sci-fi">Sci-Fi</option>
+              <option value="horror">Horror</option>
+            </select>
+          </div>
+          <div class="search-dropdown" id="searchDropdown" role="listbox" aria-label="Search results"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="navbar__right">
+        <button class="icon-btn notification-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge">3</span>
+        </button>
+
+        <div class="user-menu-wrapper" id="userMenuWrapper">
+          <button class="user-avatar-btn" id="userAvatarBtn" aria-label="User menu" aria-expanded="false" aria-haspopup="true">
+            <div class="user-avatar" id="userAvatar" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span class="user-name" id="userDisplayName">Sign In</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-header">
+              <div class="dropdown-avatar" id="dropdownAvatar" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div class="dropdown-name" id="dropdownName">Guest User</div>
+                <div class="dropdown-email" id="dropdownEmail">Sign in to continue</div>
+              </div>
+            </div>
+            <hr class="dropdown-divider" />
+            <a href="pages/profile.html" class="dropdown-item" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              My Profile
+            </a>
+            <a href="pages/booking-history.html" class="dropdown-item" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+              My Bookings
+            </a>
+            <hr class="dropdown-divider" />
+            <button class="dropdown-item dropdown-item--danger" id="logoutBtn" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Logout
+            </button>
+            <a href="pages/login.html" class="dropdown-item auth-link" id="loginLink" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In
+            </a>
+          </div>
+        </div>
+
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE OVERLAY MENU -->
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true" aria-modal="true" role="dialog">
+    <nav class="mobile-menu" aria-label="Mobile navigation">
+      <div class="mobile-menu-header">
+        <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close navigation menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <a href="index.html" class="mobile-nav-link">🏠 Home</a>
+      <a href="pages/movies.html" class="mobile-nav-link">🎬 Movies</a>
+      <a href="pages/booking-history.html" class="mobile-nav-link">🎟️ Booking History</a>
+      <a href="pages/profile.html" class="mobile-nav-link">👤 Profile</a>
+      <a href="pages/login.html" class="mobile-nav-link mobile-auth-link" id="mobileLoginLink">🔑 Sign In</a>
+    </nav>
+  </div>
+
+  <!-- NOTIFICATION PANEL -->
+  <aside class="notification-panel" id="notifPanel" aria-label="Notifications" aria-hidden="true">
+    <div class="notif-header">
+      <h3>Notifications</h3>
+      <button class="mark-all-read" id="markAllRead">Mark all read</button>
+    </div>
+    <div class="notif-list" id="notifList" role="list"></div>
+  </aside>
+
+  <main id="mainContent">
+
+    <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+    <section class="hero" id="heroSection" aria-label="Featured Movie">
+      <div class="hero__backdrop" id="heroBackdrop" aria-hidden="true"></div>
+      <div class="hero__gradient" aria-hidden="true"></div>
+      <div class="hero__content">
+        <div class="hero__meta" id="heroMeta">
+          <div class="hero__badges" id="heroBadges">
+            <span class="badge badge--ghost skeleton-badge" aria-hidden="true">Loading</span>
+          </div>
+          <h1 class="hero__title" id="heroTitle">
+            <span class="skeleton-text skeleton-title" aria-hidden="true"></span>
+          </h1>
+          <div class="hero__info" id="heroInfo">
+            <span class="hero__info-item skeleton-text" style="width:120px" aria-hidden="true"></span>
+          </div>
+          <p class="hero__desc" id="heroDesc" aria-live="polite">
+            <span class="skeleton-text" style="width:90%" aria-hidden="true"></span>
+            <span class="skeleton-text" style="width:65%;margin-top:6px" aria-hidden="true"></span>
+          </p>
+          <div class="hero__actions" id="heroActions">
+            <button class="btn btn--outline btn--lg" id="heroTrailerBtn" disabled aria-label="Watch trailer">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Watch Trailer
+            </button>
+            <button class="btn btn--primary btn--lg" id="heroBookBtn" disabled aria-label="Book tickets">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+              Book Now
+            </button>
+          </div>
+        </div>
+        <div class="hero__poster-wrap" aria-hidden="true">
+          <div class="hero__poster" id="heroPoster">
+            <div class="hero__poster-skeleton"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero__dots" id="heroDots" role="tablist" aria-label="Featured movie slides"></div>
+      <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="Previous featured movie">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="Next featured movie">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </section>
+
+    <!-- ════════════════════════ TRENDING MOVIES ════════════════════════ -->
+    <section class="section" id="trendingSection" aria-labelledby="trendingHeading">
+      <div class="section__container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title" id="trendingHeading">
+              <span class="title-icon" aria-hidden="true">🔥</span> Trending Now
+            </h2>
+            <p class="section__subtitle">Most booked movies this week</p>
+          </div>
+          <a href="pages/movies.html?filter=trending" class="btn btn--ghost btn--sm" id="viewAllTrending">
+            View All
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="movie-grid" id="trendingGrid" role="list" aria-label="Trending movies" aria-live="polite">
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ UPCOMING MOVIES ════════════════════════ -->
+    <section class="section section--alt" id="upcomingSection" aria-labelledby="upcomingHeading">
+      <div class="section__container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title" id="upcomingHeading">
+              <span class="title-icon" aria-hidden="true">📅</span> Coming Soon
+            </h2>
+            <p class="section__subtitle">Mark your calendars</p>
+          </div>
+          <a href="pages/movies.html?filter=upcoming" class="btn btn--ghost btn--sm">
+            View All
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="movie-grid" id="upcomingGrid" role="list" aria-label="Upcoming movies" aria-live="polite">
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ POPULAR MOVIES ═════════════════════════ -->
+    <section class="section" id="popularSection" aria-labelledby="popularHeading">
+      <div class="section__container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title" id="popularHeading">
+              <span class="title-icon" aria-hidden="true">⭐</span> Popular Movies
+            </h2>
+            <p class="section__subtitle">Fan favourites of all time</p>
+          </div>
+          <a href="pages/movies.html?filter=popular" class="btn btn--ghost btn--sm">
+            View All
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="movie-grid" id="popularGrid" role="list" aria-label="Popular movies" aria-live="polite">
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════ RECOMMENDED ══════════════════════════════ -->
+    <section class="section section--alt" id="recommendedSection" aria-labelledby="recommendedHeading">
+      <div class="section__container">
+        <div class="section__header">
+          <div>
+            <h2 class="section__title" id="recommendedHeading">
+              <span class="title-icon" aria-hidden="true">💡</span> Recommended For You
+            </h2>
+            <p class="section__subtitle">Based on your preferences</p>
+          </div>
+        </div>
+        <div class="movie-grid" id="recommendedGrid" role="list" aria-label="Recommended movies" aria-live="polite">
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+          <div class="movie-card skeleton-card" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- TRAILER MODAL -->
+  <div class="modal-overlay" id="trailerModal" role="dialog" aria-modal="true" aria-label="Movie Trailer" aria-hidden="true">
+    <div class="modal modal--video">
+      <button class="modal__close" id="trailerClose" aria-label="Close trailer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__video-container">
+        <iframe id="trailerFrame" src="" title="Movie Trailer" allowfullscreen frameborder="0" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false" role="status"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__container">
+      <div class="footer__brand">
+        <a href="index.html" class="navbar__logo" aria-label="MovieHub">
+          <span class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="#E63946"/><path d="M9 10L19 14L9 18V10Z" fill="white"/></svg>
+          </span>
+          <span class="logo-text">Movie<span class="logo-accent">Hub</span></span>
+        </a>
+        <p class="footer__tagline">Your ultimate movie experience starts here. Book tickets for the latest blockbusters.</p>
+        <div class="footer__socials">
+          <a href="#" class="social-link" aria-label="Twitter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.258 5.639L18.244 2.25z"/></svg>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" class="social-link" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer__col">
+          <h4>Support</h4>
+          <a href="#">Contact Us</a>
+          <a href="#">FAQ</a>
+          <a href="#">Refund Policy</a>
+          <a href="#">Help Center</a>
+        </div>
+        <div class="footer__col">
+          <h4>Legal</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2025 MovieHub. All rights reserved. Made with ❤️ for movie lovers.</p>
+      <p class="footer__tech">Powered by Spring Boot Microservices + API Gateway</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/api/config.js"></script>
+  <script type="module" src="js/utils/auth.js"></script>
+  <script type="module" src="js/utils/toast.js"></script>
+  <script type="module" src="js/utils/helpers.js"></script>
+  <script type="module" src="js/components/navbar.js"></script>
+  <script type="module" src="js/pages/home.js"></script>
+</body>
+</html>
