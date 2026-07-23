@@ -716,7 +716,7 @@
 
       try {
         const user = Auth.getUser();
-        const userId = user?.userId || user?.id || 1;
+        const userId = parseInt(user?.userId || user?.id, 10) || 1;
 
         const booking = await ApiClient.post(API.BOOKINGS.CREATE, {
           bookingNumber: 'BK-' + Date.now().toString(36).toUpperCase(),

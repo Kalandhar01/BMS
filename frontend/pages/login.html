@@ -434,7 +434,7 @@
     function simulateLogin(user) {
       const mockToken = btoa(JSON.stringify({ sub: user.email, exp: Math.floor(Date.now()/1000) + 86400 }));
       const fakeJwt   = `eyJhbGc.${mockToken}.signature`;
-      Auth.setSession(fakeJwt, { ...user, firstName: user.name.split(' ')[0], userId: 'usr_' + Date.now() }, true);
+      Auth.setSession(fakeJwt, { ...user, firstName: user.name.split(' ')[0], userId: 1 }, true);
       toast.success(`Welcome, ${user.name.split(' ')[0]}!`);
       const redirect = new URLSearchParams(window.location.search).get('redirect') || '../index.html';
       setTimeout(() => window.location.href = redirect, 1200);
@@ -488,7 +488,7 @@
           await new Promise(r => setTimeout(r, 1500));
           const mockPayload = { sub: email, exp: Math.floor(Date.now()/1000) + 86400, firstName: email.split('@')[0] };
           token = `eyJhbGc.${btoa(JSON.stringify(mockPayload))}.signature`;
-          user  = { email, firstName: email.split('@')[0], lastName: '', userId: 'usr_demo' };
+          user  = { email, firstName: email.split('@')[0], lastName: '', userId: 1 };
         }
 
         Auth.setSession(token, user, remember);

@@ -424,7 +424,7 @@
           await new Promise(r => setTimeout(r, 1800));
           const mockPayload = { sub: email, exp: Math.floor(Date.now()/1000) + 86400 };
           token = `eyJhbGc.${btoa(JSON.stringify(mockPayload))}.signature`;
-          user  = { email, firstName, lastName, phone, userId: 'usr_' + Date.now() };
+          user  = { email, firstName, lastName, phone, userId: 1 };
         }
 
         Auth.setSession(token, user, true);

@@ -24,7 +24,8 @@ public class GatewayConfig {
 
     private static final List<String> PUBLIC_PATHS = List.of(
         "/auth/login", "/auth/register", "/auth/validate",
-        "/movies", "/screens", "/shows", "/seats/show"
+        "/movies", "/screens", "/shows", "/seats/show",
+        "/bookings/user", "/payments"
     );
 
     private boolean isPublicPath(String path) {

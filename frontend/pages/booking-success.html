@@ -508,9 +508,11 @@
       document.getElementById('ticketBookingId').textContent = b.bookingId || 'MH-XXXXXX';
 
       const seatsEl = document.getElementById('ticketSeats');
-      seatsEl.innerHTML = (b.seats || []).map(s =>
-        `<span class="ticket__seat-chip">${s.seatNumber || s}</span>`
-      ).join('');
+      const seatArray = typeof b.seats === 'string' ? b.seats.split(',') : (b.seats || []);
+      seatsEl.innerHTML = seatArray.map(s => {
+        const label = typeof s === 'string' ? s : (s.seatNumber || s.id || '');
+        return `<span class="ticket__seat-chip">${label}</span>`;
+      }).join('');
     }
 
     // Copy booking ID on click
