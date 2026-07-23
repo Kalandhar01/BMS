@@ -1,0 +1,135 @@
+.coupon-code {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 16px;
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px dashed var(--border-accent);
+  border-radius: 9999px;
+  letter-spacing: 1px;
+  user-select: all;
+}
+
+.discount-highlight {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.discount-highlight .discount-suffix {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.usage-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.usage-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.usage-progress-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.usage-progress-value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.offer-date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.offer-date-range .date-separator {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.offer-date-range .date-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.offer-status-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.offer-card {
+  padding: 20px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: all var(--transition-smooth);
+}
+
+.offer-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-light);
+}
+
+.offer-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.offer-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.offer-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.offer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.offer-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.offer-meta-item .meta-icon {
+  font-size: 14px;
+}
+
+.offer-min-amount {
+  font-size: 12px;
+  color: var(--text-muted);
+}

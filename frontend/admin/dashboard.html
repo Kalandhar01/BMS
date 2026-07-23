@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - MovieHub Admin</title>
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#FF3D5A"/>
+            <path d="M10 12L22 16L10 20V12Z" fill="white"/>
+          </svg>
+        </div>
+        <span class="sidebar-brand-text">MovieHub</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active"><span class="nav-icon">📊</span><span class="nav-text">Dashboard</span></a>
+        <a href="movies.html" class="nav-item"><span class="nav-icon">🎬</span><span class="nav-text">Movies</span></a>
+        <a href="shows.html" class="nav-item"><span class="nav-icon">🎭</span><span class="nav-text">Shows</span></a>
+        <a href="theatres.html" class="nav-item"><span class="nav-icon">🏢</span><span class="nav-text">Theatres</span></a>
+        <a href="screens.html" class="nav-item"><span class="nav-icon">📺</span><span class="nav-text">Screens</span></a>
+        <a href="seats.html" class="nav-item"><span class="nav-icon">💺</span><span class="nav-text">Seats</span></a>
+        <a href="bookings.html" class="nav-item"><span class="nav-icon">🎟</span><span class="nav-text">Bookings</span></a>
+        <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span class="nav-text">Users</span></a>
+        <a href="payments.html" class="nav-item"><span class="nav-icon">💳</span><span class="nav-text">Payments</span></a>
+        <a href="offers.html" class="nav-item"><span class="nav-icon">🏷</span><span class="nav-text">Offers</span></a>
+        <a href="reports.html" class="nav-item"><span class="nav-icon">📈</span><span class="nav-text">Reports</span></a>
+        <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-text">Settings</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="../index.html" class="nav-item" onclick="localStorage.removeItem('adminToken');localStorage.removeItem('moviehub_user');"><span class="nav-icon">🚪</span><span class="nav-text">Logout</span></a>
+      </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+      <div class="navbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="navbar-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="search-input" id="globalSearch" placeholder="Search movies, bookings, users..." />
+          <span class="search-shortcut">⌘K</span>
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <button class="nav-icon-btn" id="notifBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notification-badge">3</span>
+        </button>
+
+        <button class="nav-icon-btn" id="msgBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="notification-badge">5</span>
+        </button>
+
+        <button class="theme-toggle" id="themeToggle">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <span class="navbar-date" id="currentDate"></span>
+
+        <div class="admin-profile" id="adminProfile">
+          <div class="admin-avatar" id="adminAvatar">A</div>
+          <div class="admin-info">
+            <span class="admin-name">Admin</span>
+            <span class="admin-role">Super Admin</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary quick-add-btn" id="quickAddBtn">+ New</button>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p class="page-subtitle">Welcome back, Admin! Here's what's happening today.</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-outline-secondary" id="exportDashboardBtn">📥 Export</button>
+          <button class="btn btn-outline-secondary" id="refreshDashboardBtn">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-card-icon accent">🎬</div>
+          <div class="stat-card-label">Total Movies</div>
+          <div class="stat-card-value" id="statTotalMovies">--</div>
+          <span class="stat-card-change up">↑ 12%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon info">🎭</div>
+          <div class="stat-card-label">Active Shows</div>
+          <div class="stat-card-value" id="statActiveShows">--</div>
+          <span class="stat-card-change up">↑ 8%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon success">🎟</div>
+          <div class="stat-card-label">Total Bookings</div>
+          <div class="stat-card-value" id="statTotalBookings">--</div>
+          <span class="stat-card-change up">↑ 23%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon warning">💰</div>
+          <div class="stat-card-label">Revenue</div>
+          <div class="stat-card-value" id="statRevenue">--</div>
+          <span class="stat-card-change up">↑ 18%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon info">🏢</div>
+          <div class="stat-card-label">Theatres</div>
+          <div class="stat-card-value" id="statTheatres">--</div>
+          <span class="stat-card-change neutral">0%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon accent">📺</div>
+          <div class="stat-card-label">Screens</div>
+          <div class="stat-card-value" id="statScreens">--</div>
+          <span class="stat-card-change up">↑ 5%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon success">👥</div>
+          <div class="stat-card-label">Active Users</div>
+          <div class="stat-card-value" id="statActiveUsers">--</div>
+          <span class="stat-card-change up">↑ 15%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon danger">🏷</div>
+          <div class="stat-card-label">Active Offers</div>
+          <div class="stat-card-value" id="statActiveOffers">--</div>
+          <span class="stat-card-change down">↓ 3%</span>
+          <div class="stat-card-period">vs last month</div>
+        </div>
+      </div>
+
+      <div class="chart-grid-2">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Revenue Overview</h3>
+            <select class="chart-period-select" id="revenuePeriod">
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+              <option value="365">This Year</option>
+            </select>
+          </div>
+          <canvas id="revenueChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Booking Trends</h3>
+            <select class="chart-period-select" id="bookingTrendPeriod">
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+            </select>
+          </div>
+          <canvas id="bookingTrendChart"></canvas>
+        </div>
+        <div class="chart-container chart-full">
+          <div class="chart-header">
+            <h3 class="chart-title">Popular Movies</h3>
+            <select class="chart-period-select" id="popularMoviesPeriod">
+              <option value="7">This Week</option>
+              <option value="30" selected>This Month</option>
+              <option value="90">This Quarter</option>
+            </select>
+          </div>
+          <canvas id="popularMoviesChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Genre Distribution</h3>
+          </div>
+          <canvas id="genreDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <h3 class="table-title">Recent Bookings</h3>
+            <span class="table-count" id="recentBookingCount">Showing 10 entries</span>
+          </div>
+          <div class="table-toolbar-right">
+            <button class="btn btn-sm btn-ghost" id="viewAllBookingsBtn">View All</button>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Movie</th>
+                <th>Show</th>
+                <th>Seats</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recentBookingsTableBody">
+              <tr>
+                <td colspan="7" class="text-center text-muted">Loading recent bookings...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+          <h3>Recent Activity</h3>
+          <button class="btn btn-sm btn-ghost" id="viewAllActivityBtn">View All</button>
+        </div>
+        <div class="card-body">
+          <div class="activity-feed" id="activityFeed">
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div class="activity-content">
+                <span class="activity-text">Loading recent activity...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script type="module" src="js/admin.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
